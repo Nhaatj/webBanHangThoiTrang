@@ -1,4 +1,4 @@
-<!-- File này giải quyết logic cho register.php -->
+<!-- File này giải quyết logic cho login.php -->
 
 <?php
 $fullname = $email = $msg = '';
@@ -27,10 +27,5 @@ if(!empty($_POST)) {
         header(header: 'Location:../');
         die();
     }
-
-
-
-    
-    
 } 
 ?>

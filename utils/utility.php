@@ -55,10 +55,10 @@ function getSecurityMD5($pwd) {
 
 function getUserToken() {
     // Cách viết khác an toàn hơn:
-    // if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
+    // if (!empty($_SESSION['user'])) {
     //     return $_SESSION['user'];
     // }
-    if($_SESSION['user']) {
+    if(isset($_SESSION['user'])) {
         return $_SESSION['user'];
     }
     $token = getCookie('token'); //'token' này là tên của một Cookies(F12->Application->Cookies), thuộc trường Name.
@@ -70,7 +70,7 @@ function getUserToken() {
         $item = executeResult($sql, true);
         if($item != null) {
             $_SESSION['user'] = $item;
-            return $item;
+            return $item;   
         } 
     }
 
