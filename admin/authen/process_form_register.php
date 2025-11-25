@@ -3,7 +3,7 @@
 <?php
 $fullname = $email = $msg = '';
 
-if(!empty($_POST)) {
+if (!empty($_POST)) {
     $fullname = getPost('fullname');
     $email = getPost('email');
     $pwd = getPost('password');
@@ -16,7 +16,7 @@ if(!empty($_POST)) {
 
 
 
-        
+
     } else {
         //Validate thành công
         $userExist = executeResult("select * from User where email = '$email'", isSingle: true);
@@ -34,5 +34,5 @@ if(!empty($_POST)) {
             die();
         }
     }
-} 
+}
 ?>

@@ -3,29 +3,29 @@
 <?php
 $fullname = $email = $msg = '';
 
-if(!empty($_POST)) {
+if (!empty($_POST)) {
     $email = getPost('email');
     $pwd = getPost('password');
     $pwd = getSecurityMD5($pwd);
 
-    $sql = "select * from User where email = '$email' and password = '$pwd'";
+    $sql = "select * from User where email = '$email' and password = '$pwd' and deleted = 0";
     $userExist = executeResult($sql, isSingle: true);
     if ($userExist == null) {
-        $msg = 'Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu!';
+        $msg = 'Đăng nhập thất bại!<br>Vui lòng kiểm tra lại Email hoặc Mật Khẩu.';
     } else {
         //login thành công
-        $token = getSecurityMD5($userExist['email'].time());
+        $token = getSecurityMD5($userExist['email'] . time());
         setcookie('token', $token, time() + 7 * 24 * 60 * 60, '/');
         $created_at = date('Y-m-d H:i:s');
         $userId = $userExist['id'];
-        
+
         $_SESSION['user'] = $userExist;
 
         $sql = "insert into Tokens (user_id, token, created_at) values ('$userId','$token', '$created_at')";
-        execute($sql); 
+        execute($sql);
 
         header(header: 'Location:../');
         die();
     }
-} 
+}
 ?>

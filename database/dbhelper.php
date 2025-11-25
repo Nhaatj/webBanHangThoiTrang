@@ -3,10 +3,11 @@ require_once('config.php');
 
 // insert, update, delete, select
 // SQL: insert, update, delete
-function execute($sql) {
+function execute($sql)
+{
     //open connection
     $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
-    mysqli_set_charset($conn,'utf8');
+    mysqli_set_charset($conn, 'utf8');
 
     //query
     mysqli_query($conn, $sql);
@@ -16,26 +17,27 @@ function execute($sql) {
 }
 
 // SQL: select -> lấy dữ liệu đầu ra (select danh sách bản ghi, lấy 1 bản ghi)
-function executeResult($sql, $isSingle = false) {
+function executeResult($sql, $isSingle = false)
+{
     $data = null;
 
     //open connection
     $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
-    mysqli_set_charset($conn,'utf8');
+    mysqli_set_charset($conn, 'utf8');
 
     //query
     $resultset = mysqli_query($conn, $sql);
-    if($isSingle) {
-        $data = mysqli_fetch_array($resultset,mode: 1);
+    if ($isSingle) {
+        $data = mysqli_fetch_array($resultset, mode: 1);
     } else {
         $data = [];
-        while(($row = mysqli_fetch_array($resultset,mode: 1)) != null) {
+        while (($row = mysqli_fetch_array($resultset, mode: 1)) != null) {
             $data[] = $row;
         }
     }
 
     //close connection
     mysqli_close($conn);
-    
-    return $data; 
+
+    return $data;
 }
