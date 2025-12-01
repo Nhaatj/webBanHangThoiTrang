@@ -45,7 +45,7 @@ $roleItems = executeResult($sql);
           <div class="form-group">
             <label for="role_id">Role:</label>
             <select class="form-control" name="role_id" id="role_id" required="true">
-              <option>-- Chọn --</option>
+              <option value="">-- Chọn --</option>
               <?php
               foreach ($roleItems as $role) {
                 if ($role['id'] == $role_id) {

@@ -4,7 +4,6 @@ $baseUrl = '../';
 require_once('../layouts/header.php');
 
 $sql = "select User.*, Role.name as role_name from User left join role on User.role_id = Role.id where User.deleted = 0";
-
 $data = executeResult($sql);
 ?>
 
@@ -63,13 +62,16 @@ $data = executeResult($sql);
         option = confirm('Bạn có chắc muốn xóa tài khoản này không?')
         if (!option) return;
 
-        $.post('form_api.php', {
+        $.post(
+            'form_api.php', 
+            {
                 'id': id,
                 'action': 'delete'
             },
             function(data) {
                 location.reload()
-            })
+            }
+        )
     }
 </script>
 

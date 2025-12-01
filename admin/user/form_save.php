@@ -22,9 +22,9 @@ if (!empty($_POST)) {
       $msg = 'Email đã tồn tại, vui lòng kiểm tra lại!';
     } else {
       if ($password != '') {
-        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', password = '$password', updated_at = '$updated_at', role_id = '$role_id' where id = '$id'";
+        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', password = '$password', updated_at = '$updated_at', role_id = '$role_id' where id = $id";
       } else {
-        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', updated_at = '$updated_at', role_id = '$role_id' where id = '$id'";
+        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', updated_at = '$updated_at', role_id = '$role_id' where id = $id";
       }
       execute($sql);
       header('Location: index.php');

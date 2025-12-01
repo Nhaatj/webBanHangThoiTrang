@@ -83,3 +83,31 @@ function getUserToken()
 
     return null;
 }
+
+function moveFile($key, $rootPath = "../../") {
+    if(!isset($_FILES[$key]) || !isset($_FILES[$key]['name']) || $_FILES[$key]['name'] == '') {
+        return '';
+    }
+
+    $pathTemp = $_FILES[$key]["tmp_name"];
+    
+    $filename = $_FILES[$key]['name']; 
+    //filename -> Có thể làm thêm: bỏ kí tự đặc biệt, khoảng trống, ...vv -> định dạng lại theo chuẩn.
+
+    $newPath="assets/photos/".$filename;
+
+    move_uploaded_file($pathTemp,$rootPath.$newPath);
+
+    return $newPath;
+}
+
+function fixUrl($thumbnail, $rootPath = "../../") {
+    if(stripos($thumbnail, 'http://') !== false || stripos($thumbnail, 'https://') !== false) { 
+        // Nếu là link online thì giữ nguyên
+    } else {
+        // Nếu là link nội bộ thì nối thêm đường dẫn gốc
+        $thumbnail = $rootPath.$thumbnail;
+    }
+
+    return $thumbnail;
+}
