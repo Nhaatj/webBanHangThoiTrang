@@ -12,16 +12,43 @@ if (!empty($_POST)) {
   $action = getPost('action');
 
   switch ($action) {
-    case 'mark':
-      deleteUser();
+    case 'mark_read':
+      markReadFeedback();
+      break;
+    case 'delete':
+      deleteFeedback();
       break;
   }
 }
 
-function deleteUser()
+function markReadFeedback()
 {
-  $id = getPost('id');
-  $updated_at = date("Y-m-d H:i:s");
-  $sql = "update Feedback set status = 1, updated_at = '$updated_at' where id = $id";
-  execute($sql);
+  // Nhận chuỗi JSON ids từ client gửi lên
+  $idsJson = $_POST['ids'];
+  $ids = json_decode($idsJson); // Chuyển về mảng PHP
+
+  if (is_array($ids) && count($ids) > 0) {
+    $updated_at = date("Y-m-d H:i:s");
+    // Chuyển mảng id thành chuỗi dạng (1, 2, 3) để dùng trong câu lệnh IN
+    $idsString = implode(',', $ids);
+
+    // Cập nhật status = 1 (Đã đọc) cho các ID được chọn
+    $sql = "update FeedBack set status = 1, updated_at = '$updated_at' where id IN ($idsString)";
+    execute($sql);
+  }
+}
+
+function deleteFeedback()
+{
+  $idsJson = $_POST['ids'];
+  $ids = json_decode($idsJson);
+
+  if (is_array($ids) && count($ids) > 0) {
+    $updated_at = date("Y-m-d H:i:s");
+    $idsString = implode(',', $ids);
+
+    // Cập nhật status = 3 (Đã xóa/Ẩn)
+    $sql = "update FeedBack set status = 2, updated_at = '$updated_at' where id IN ($idsString)";
+    execute($sql);
+  }
 }
