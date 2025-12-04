@@ -54,7 +54,7 @@ $data = executeResult($sql);
                             <td>' . $item['note'] . '</td>
                             <td>' . $item['updated_at'] . '</td>
                             <td style="width: 50px; text-align: center;">
-                                <input type="checkbox" class="feedback-checkbox" value="' . $item['id'] . '">
+                                <input type="checkbox" class="feedback-checkbox" value="' . $item['id'] . '" data-status="' . $item['status'] . '">
                             </td>
                         </tr>';
                 }
@@ -84,7 +84,6 @@ $data = executeResult($sql);
 
     // Xử lý nút "Đã đọc"
     function markRead() {
-        // Fix lỗi button bị giữ focus sau khi click
         if (document.activeElement) {
             document.activeElement.blur();
         }
@@ -101,14 +100,14 @@ $data = executeResult($sql);
                 'action': 'mark_read'
             },
             function(data) {
-                // Xử lý giao diện sau khi thành công
                 for (var i = 0; i < ids.length; i++) {
-                    // 1. Chuyển màu xám cho dòng
                     $('#tr_' + ids[i]).css('background-color', '#e9ecef').css('color', '#6c757d');
-                    // 2. Reset (bỏ tick) checkbox
-                    $('input[value="' + ids[i] + '"]').prop('checked', false);
+                    var checkbox = $('input[value="' + ids[i] + '"]');
+                    checkbox.prop('checked', false);
+
+                    // QUAN TRỌNG: Cập nhật lại status thành 1 để sau này có thể xóa được ngay
+                    checkbox.attr('data-status', 1);
                 }
-                // Bỏ tick nút "Chọn tất cả" nếu có
                 $('#checkAll').prop('checked', false);
             }
         );
@@ -116,18 +115,35 @@ $data = executeResult($sql);
 
     // Xử lý nút "Xóa"
     function deleteFeedback() {
-        // Fix lỗi button bị giữ focus sau khi click
         if (document.activeElement) {
             document.activeElement.blur();
         }
 
-        var ids = getSelectedIds();
+        // Logic lọc ID: Chỉ lấy những ID nào có status != 0
+        var ids = [];
+        var hasUnread = false; // Cờ kiểm tra có tin chưa đọc không
+
+        $('.feedback-checkbox:checked').each(function() {
+            var status = $(this).attr('data-status');
+            if (status == 0) {
+                hasUnread = true; // Phát hiện tin chưa đọc
+            } else {
+                ids.push($(this).val()); // Chỉ thêm tin đã đọc vào danh sách xóa
+            }
+        });
+
+        if (hasUnread) {
+            alert('Bạn không được xóa những phản hồi "Chưa Đọc"!');
+        }
+
         if (ids.length == 0) {
-            alert('Vui lòng chọn ít nhất một phản hồi để xóa!');
+            if (!hasUnread) {
+                alert('Vui lòng chọn ít nhất một phản hồi để xóa!');
+            }
             return;
         }
 
-        if (!confirm('Bạn có chắc chắn muốn xóa các phản hồi đã chọn không?')) return;
+        if (!confirm('Bạn có chắc chắn muốn xóa ' + ids.length + ' phản hồi ĐÃ ĐỌC được chọn không?')) return;
 
         $.post(
             'form_api.php', {
@@ -135,11 +151,9 @@ $data = executeResult($sql);
                 'action': 'delete'
             },
             function(data) {
-                // Xử lý giao diện: Xóa hàng khỏi bảng
                 for (var i = 0; i < ids.length; i++) {
                     $('#tr_' + ids[i]).remove();
                 }
-                // Bỏ tick nút "Chọn tất cả"
                 $('#checkAll').prop('checked', false);
             }
         );

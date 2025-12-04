@@ -47,8 +47,9 @@ function deleteFeedback()
     $updated_at = date("Y-m-d H:i:s");
     $idsString = implode(',', $ids);
 
-    // Cập nhật status = 3 (Đã xóa/Ẩn)
-    $sql = "update FeedBack set status = 2, updated_at = '$updated_at' where id IN ($idsString)";
+    // CẬP NHẬT: Thêm điều kiện 'and status != 0'
+    // Chỉ xóa (ẩn) những phản hồi nào KHÔNG PHẢI là chưa đọc (tức là đã đọc rồi)
+    $sql = "update FeedBack set status = 2, updated_at = '$updated_at' where id IN ($idsString) and status != 0";
     execute($sql);
   }
 }
