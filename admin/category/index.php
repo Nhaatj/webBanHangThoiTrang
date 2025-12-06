@@ -20,8 +20,8 @@ $data = executeResult($sql);
 ?>
 
 <div class="row" style="margin-top: 20px;">
-    <div class="col-md-12" style="margin-bottom: 20px;">
-        <h3>Quản Lý Danh Mục Sản Phẩm</h3>
+    <div class="col-md-12">
+        <h3 style="margin-bottom: 16px;">Quản Lý Danh Mục Sản Phẩm</h3>
     </div>    
     <div class="col-md-6">
         <form method="post" action="index.php" onsubmit="return validateForm();" style="font-weight: 700">
@@ -34,7 +34,7 @@ $data = executeResult($sql);
         </form>
     </div>    
     <div class="col-md-6 table-responsive">
-        <table class="table table-bordered table-hover" style="margin-top: 20px;">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th>STT</th>

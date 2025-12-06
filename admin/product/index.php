@@ -9,11 +9,13 @@ $data = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12 table-responsive">
-        <h3>Quản Lý Sản Phẩm</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center">
+            <h3 style="margin-bottom: 0;">Quản Lý Sản Phẩm</h3>
+        
+            <a href="editor.php"><button class="btn btn-success">Thêm Sản Phẩm</button></a>
+        </div>
 
-        <a href="editor.php"><button class="btn btn-success">Thêm Sản Phẩm</button></a>
-
-        <table class="table table-bordered table-hover" style="margin-top: 20px;">
+        <table class="table table-bordered table-hover" style="margin-top: 10px;">
             <thead>
                 <tr>
                     <th>STT</th>

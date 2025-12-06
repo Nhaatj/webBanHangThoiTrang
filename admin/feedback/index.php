@@ -12,12 +12,12 @@ $data = executeResult($sql);
 ?>
 
 <div class="row" style="margin-top: 20px;">
-    <div class="col-md-12">
-        <h3>Quản Lý Phản Hồi</h3>
-    </div>
-    <div class="col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
-        <button class="btn btn-warning" onclick="markRead()">Đã Đọc</button>
-        <button class="btn btn-danger" onclick="deleteFeedback()">Xóa</button>
+    <div class="col-md-12" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
+        <h3 style="margin-bottom: 0;">Quản Lý Phản Hồi</h3>
+        <div>
+            <button class="btn btn-warning" onclick="markRead()">Đã Đọc</button>
+            <button class="btn btn-danger" onclick="deleteFeedback()">Xóa</button>
+        </div>
     </div>
 
     <div class="col-md-12 table-responsive">
@@ -75,9 +75,11 @@ $data = executeResult($sql);
 
     // Hàm lấy danh sách ID đã tick
     function getSelectedIds() {
+        // ids là mảng chứa id của các feedback đã check
         var ids = [];
         $('.feedback-checkbox:checked').each(function() {
             ids.push($(this).val());
+            // hàm val lấy giá trị của thuộc tính value của thẻ checkbox đã check (Tức thẻ chứa class feedback-checkbox đã check)
         });
         return ids;
     }

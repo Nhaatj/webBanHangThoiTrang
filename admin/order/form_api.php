@@ -12,16 +12,17 @@ if (!empty($_POST)) {
   $action = getPost('action');
 
   switch ($action) {
-    case 'delete':
-      deleteUser();
+    case 'update_status':
+      updateStatus();
       break;
   }
 }
 
-function deleteUser()
+function updateStatus()
 {
   $id = getPost('id');
-  $updated_at = date("Y-m-d H:i:s");
-  $sql = "update User set deleted = 1, updated_at = '$updated_at' where id = $id";
+  $status = getPost('status');
+
+  $sql = "update Orders set status = $status where id = $id";
   execute($sql);
 }
