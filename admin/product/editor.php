@@ -56,14 +56,14 @@ $categoryItems = executeResult($sql);
                                 <!-- <label for="thumbnail">Thumbnail:</label>
                                 <input required="true" type="text" class="form-control" id="thumbnail" name="thumbnail" value="<?= $thumbnail ?>" onchange="updateThumbnail()">
                                 <img id="thumbnail_img" src="<?= $thumbnail ?>" style="max-height: 200px; margin-top: 5px; margin-bottom: 10px; max-width: 100%;"> -->
-                                <label for="thumbnail thumbnail_url">Thumbnail (File/URL):</label>
+                                <label for="thumbnail_url">Thumbnail (File/URL):</label>
                                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept=".avif, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" onchange="updateThumbnail()" style="margin-bottom: 10px;">
-                                <!-- <img id=" thumbnail_img" src="<?= fixUrl($thumbnail) ?>" style="max-height: 200px; margin-top: 5px; margin-bottom: 10px; max-width: 100%;"> -->
+                                <!-- <img id=" thumbnail_img" src="<?= fixUrl($thumbnail, '../../') ?>" style="max-height: 200px; margin-top: 5px; margin-bottom: 10px; max-width: 100%;"> -->
                                 <input type="text" class="form-control" id="thumbnail_url" name="thumbnail_url" value="<?= (strpos($thumbnail, 'http') !== false ? $thumbnail : '') ?>" placeholder="Nhập URL..." oninput="updateThumbnail()">
                             </div>
 
                             <div class="form-group">
-                                <img id="thumbnail_img" src="<?= ($thumbnail != '') ? fixUrl($thumbnail) : 'https://placehold.co/600x400?text=No+Image' ?>" style="max-height: 160px; margin-top: 5px; margin-bottom: 10px; max-width: 100%; object-fit: contain; border: 1px solid #ccc;">
+                                <img id="thumbnail_img" src="<?= ($thumbnail != '') ? fixUrl($thumbnail, '../../') : 'https://placehold.co/600x400?text=No+Image' ?>" style="max-height: 160px; margin-top: 5px; margin-bottom: 10px; max-width: 100%; object-fit: contain; border: 1px solid #ccc;">
                             </div>
 
                             <div class="form-group">

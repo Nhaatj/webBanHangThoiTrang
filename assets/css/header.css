@@ -1,0 +1,138 @@
+/* 1. Phần Top Bar (Màu đen) */
+header {
+    position: fixed; /* Hoặc sticky */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Đẩy nội dung trang xuống để không bị header che mất khi dùng position: fixed */
+body {
+    padding-top: 140px; /* Chiều cao ước lượng của header */
+}
+
+.header-top {
+    background-color: #000;
+    color: #fff;
+    padding: 15px 0;
+}
+
+/* Logo: Dùng filter để chuyển logo đen thành trắng cho nổi trên nền đen */
+.logo img {
+    height: 40px; 
+    width: 50px;
+    /* filter: invert(1) brightness(2);  */
+}
+
+/* Ô tìm kiếm */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.search-container input {
+    width: 100%;
+    height: 40px;
+    padding: 5px 50px 5px 15px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+.search-container button {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 40px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.search-container button:hover {
+    background-color: #333;
+}
+
+/* Các icon bên phải (Liên hệ, Login, Cart) */
+.header-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 25px;
+}
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    position: relative;
+}
+.action-item:hover {
+    color: #ccc;
+    text-decoration: none;
+}
+.action-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+/* Số lượng giỏ hàng */
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 50%;
+    font-size: 11px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* 2. Phần Menu (Màu trắng) */
+.main-menu {
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    padding: 0;
+}
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: center; /* Căn giữa menu */
+    flex-wrap: wrap;
+}
+.nav-item-custom {
+    
+}
+.nav-item-custom a {
+    display: block;
+    padding: 15px 20px;
+    color: #000;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700; /* Chữ đậm */
+    font-size: 14px;
+    transition: 0.3s;
+}
+.nav-item-custom a:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+/* Icon NEW (nếu cần) */
+.badge-new {
+    color: red;
+    font-size: 10px;
+    vertical-align: super;
+    margin-left: 2px;
+}

@@ -2,7 +2,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 mb-4">
-                    <h5><a href="" class="social-link"><img src="assets/photos/logo.jpg" style="height: 50px; margin-left: 15px"></a></h5>
+                    <h5><a href="" style="display: inline-block;"><img src="assets/photos/logo.jpg" style="height: 50px; width: 62.5px;"></a></h5>
                     <p>123 Tô ký, Phường Tân Thới Hiệp, Quận 12, TP. HCM</p>
                     <p><strong>Điện thoại:</strong> 033 835 6397</p>`
                     <p><strong>Email:</strong> mnin2025@gmail.com</p>
@@ -53,5 +53,7 @@
         </div>
     </footer>
 
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

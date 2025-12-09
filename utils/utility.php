@@ -94,18 +94,18 @@ function moveFile($key, $rootPath = "../../") {
     $filename = $_FILES[$key]['name']; 
     //filename -> Có thể làm thêm: bỏ kí tự đặc biệt, khoảng trống, ...vv -> định dạng lại theo chuẩn.
 
-    $newPath="assets/photos/".$filename;
+    $newPath = "assets/photos/".$filename;
 
     move_uploaded_file($pathTemp,$rootPath.$newPath);
 
     return $newPath;
 }
 
-function fixUrl($thumbnail, $rootPath = "../../") {
+function fixUrl($thumbnail, $rootPath) {
     if(stripos($thumbnail, 'http://') !== false || stripos($thumbnail, 'https://') !== false) { 
         // Nếu là link online thì giữ nguyên
     } else {
-        // Nếu là link nội bộ thì nối thêm đường dẫn gốc
+        // Nếu là link local thì nối thêm đường dẫn gốc
         $thumbnail = $rootPath.$thumbnail;
     }
 

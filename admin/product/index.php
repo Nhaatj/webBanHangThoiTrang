@@ -33,7 +33,7 @@ $data = executeResult($sql);
                 foreach ($data as $item) {
                     echo '<tr>
                             <td>' . (++$index) . '</td>
-                            <td><img src="' . fixUrl($item['thumbnail']) . '" style="height: 100px;"/></td>
+                            <td><img src="' . fixUrl($item['thumbnail'], '../../') . '" style="height: 100px;"/></td>
                             <td>' . $item['title'] . '</td>
                             <td>' . number_format($item['discount']). ' đ</td>
                             <td>' . $item['category_name'] . '</td>

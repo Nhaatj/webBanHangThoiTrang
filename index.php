@@ -59,6 +59,7 @@ require_once('layouts/header.php');
             if($items == null || count($items) < 4) continue;
         ?>
         <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;"><?=$item['name']?></h2>
+        <img src="<?= fixUrl($item['banner'], '') ?>" style="height: 216px; width: 100%"/>
         <div class="row">
             <?php
                 foreach($items as $pItem) {

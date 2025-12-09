@@ -33,6 +33,7 @@ $latestItems = executeResult(sql: $sql);
     <!-- Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/css/footer.css">
     
     <style type="text/css">
@@ -63,26 +64,71 @@ $latestItems = executeResult(sql: $sql);
 </head>
 <body>
 <!-- Menu START -->
-    <ul class="nav">
-        <li style="margin-top: 0px !important;"><img src="assets/photos/logo.jpg" style="height: 80px;"></li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                Trang Chủ
-            </a>
-        </li>
-        <?php
-        foreach($menuItems as $item) {
-            echo '<li class="nav-item">
-                    <a class="nav-link" href="category.php?id='.$item['id'].'">
-                        '.$item['name'].'
-                    </a>
-                </li>';
-        }
-        ?>
-        <li class="nav-item">
-            <a class="nav-link" href="contact.php">
-                Liên Hệ
-            </a>
-        </li>
-    </ul>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-2 col-3">
+                        <a href="index.php" class="logo">
+                            <img src="assets/photos/logo.jpg" alt="M&N Shop">
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-6 col-5">
+                        <form action="index.php" method="get">
+                            <div class="search-container">
+                                <input type="text" name="search" placeholder="Bạn đang tìm gì...">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-4 col-4">
+                        <div class="header-actions">
+                            <a href="contact.php" class="action-item">
+                                <ion-icon name="call-outline" style="width: 24px; height: 24px;"></ion-icon>
+                                <span>Liên hệ</span>
+                            </a>
+                            
+                            <a href="admin/authen/login.php" class="action-item">
+                                <!-- <i class="fa fa-user"></i> -->
+                                <!-- <img src="https://cdn.hstatic.net/themes/1000253775/1001427348/14/user-account.svg?v=293" width="24px" height="24px"> -->
+                                <ion-icon name="person-outline" style="width: 24px; height: 24px;"></ion-icon>
+                                <span>Đăng nhập</span>
+                            </a>
+
+                            <a href="cart.php" class="action-item">
+                                <!-- <img src="https://cdn.hstatic.net/themes/1000253775/1001427348/14/shopping-cart.svg?v=293" width="24px" height="24px"> -->
+                                <ion-icon name="cart-outline" style="width: 24px; height: 24px;"></ion-icon>
+                                <span>Giỏ hàng</span>
+                                <span class="cart-count">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-menu">
+            <div class="container">
+                <ul class="nav-list">
+                    <li class="nav-item-custom">
+                        <a href="index.php"><i class="fa fa-search" style="color: #007bff; margin-right: 5px;"></i> HÀNG MỚI <i class="badge-new fa fa-star"></i></a>
+                    </li>
+
+                    <?php foreach($menuItems as $item): ?>
+                        <li class="nav-item-custom">
+                            <a href="category.php?id=<?=$item['id']?>">
+                                <?=$item['name']?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+
+                    <li class="nav-item-custom">
+                        <a href="#">TIN THỜI TRANG</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
 <!-- Menu STOP -->
