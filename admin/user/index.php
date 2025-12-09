@@ -3,7 +3,7 @@ $title = 'Quản Lý Người Dùng';
 $baseUrl = '../';
 require_once('../layouts/header.php');
 
-$sql = "select User.*, Role.name as role_name from User left join role on User.role_id = Role.id where User.deleted = 0";
+$sql = "select User.*, Role.name as role_name from User left join Role on User.role_id = Role.id where User.deleted = 0";
 $data = executeResult($sql);
 ?>
 

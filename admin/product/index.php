@@ -35,7 +35,7 @@ $data = executeResult($sql);
                             <td>' . (++$index) . '</td>
                             <td><img src="' . fixUrl($item['thumbnail']) . '" style="height: 100px;"/></td>
                             <td>' . $item['title'] . '</td>
-                            <td>' . number_format($item['discount']). ' VNĐ</td>
+                            <td>' . number_format($item['discount']). ' đ</td>
                             <td>' . $item['category_name'] . '</td>
                             <td style="width: 50px">
                                 <a href="editor.php?id=' . $item['id'] . '"><button class="btn btn-warning">Sửa</button></a>

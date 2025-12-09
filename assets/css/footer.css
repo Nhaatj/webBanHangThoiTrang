@@ -1,0 +1,77 @@
+/* CSS Riêng cho Footer */
+.footer-dark {
+    background-color: #000000; /* Nền đen tuyệt đối */
+    color: #ffffff;
+    padding-top: 30px;
+    font-size: 14px; /* Cỡ chữ nhỏ vừa phải */
+    font-family: Arial, sans-serif;
+}
+
+.footer-dark h5 {
+    text-transform: uppercase; /* Chữ in hoa tiêu đề */
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+.footer-dark p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.footer-dark a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-dark a:hover {
+    color: #cccccc; /* Màu khi di chuột vào */
+    text-decoration: none;
+}
+
+/* Danh sách có dấu chấm (bullet points) */
+.footer-dark ul {
+    padding-left: 20px;
+    list-style-type: disc; /* Dấu chấm tròn */
+}
+
+.footer-dark ul li {
+    margin-bottom: 10px;
+}
+
+/* Các icon mạng xã hội hình tròn */
+.social-icons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.social-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #ffffff;
+    border-radius: 50%; /* Bo tròn thành hình tròn */
+    color: #ffffff;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.social-link:hover {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+/* Đường kẻ ngang và bản quyền */
+.footer-bottom {
+    margin-top: 20px;
+    padding: 20px 0;
+    border-top: 1px solid #333333; /* Đường kẻ màu xám mờ */
+    text-align: center;
+    font-size: 13px;
+}
