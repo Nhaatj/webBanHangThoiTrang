@@ -1,138 +1,273 @@
 /* 1. Phần Top Bar (Màu đen) */
 header {
-    position: fixed; /* Hoặc sticky */
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+  position: fixed; /* Hoặc sticky */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 /* Đẩy nội dung trang xuống để không bị header che mất khi dùng position: fixed */
 body {
-    padding-top: 140px; /* Chiều cao ước lượng của header */
+  padding-top: 140px; /* Chiều cao ước lượng của header */
 }
 
 .header-top {
-    background-color: #000;
-    color: #fff;
-    padding: 15px 0;
+  background-color: #000;
+  color: #fff;
+  padding: 15px 0;
 }
 
 /* Logo: Dùng filter để chuyển logo đen thành trắng cho nổi trên nền đen */
 .logo img {
-    height: 40px; 
-    width: 50px;
-    /* filter: invert(1) brightness(2);  */
+  height: 50px;
+  width: 50px;
+  /* filter: invert(1) brightness(2);  */
 }
 
 /* Ô tìm kiếm */
 .search-container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 .search-container input {
-    width: 100%;
-    height: 40px;
-    padding: 5px 50px 5px 15px;
-    border-radius: 4px;
-    border: none;
-    outline: none;
-    font-size: 14px;
+  width: 100%;
+  height: 50px;
+  padding: 10px 50px 10px 15px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  font-size: 14px;
 }
 .search-container button {
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    bottom: 2px;
-    width: 40px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  width: 40px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
 }
 .search-container button:hover {
-    background-color: #333;
+  background-color: #333;
 }
 
 /* Các icon bên phải (Liên hệ, Login, Cart) */
 .header-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 25px;
 }
 .action-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #fff;
-    text-decoration: none;
-    font-size: 13px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  position: relative;
 }
 .action-item:hover {
-    color: #ccc;
-    text-decoration: none;
+  color: #ccc;
+  text-decoration: none;
 }
 .action-item i {
-    font-size: 20px;
-    margin-bottom: 5px;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
+
+.action-item ion-icon {
+  margin-bottom: 5px;
+}
+
 /* Số lượng giỏ hàng */
 .cart-count {
-    position: absolute;
-    top: -5px;
-    right: 5px;
-    background-color: #fff;
-    color: #000;
-    border-radius: 50%;
-    font-size: 11px;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
+  position: absolute;
+  top: -5px;
+  right: 5px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 50%;
+  font-size: 9px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+
+  font-weight: bold;
+  padding: 0 4.8px;
 }
 
 /* 2. Phần Menu (Màu trắng) */
 .main-menu {
-    border-bottom: 1px solid #ddd;
-    background: #fff;
-    padding: 0;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  padding: 0;
 }
 .nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    justify-content: center; /* Căn giữa menu */
-    flex-wrap: wrap;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center; /* Căn giữa menu */
+  flex-wrap: wrap;
 }
-.nav-item-custom {
-    
-}
+/* .nav-item-custom {
+} */
 .nav-item-custom a {
-    display: block;
-    padding: 15px 20px;
-    color: #000;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-weight: 700; /* Chữ đậm */
-    font-size: 14px;
-    transition: 0.3s;
+  display: block;
+  padding: 15px 20px;
+  color: #000;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 700; /* Chữ đậm */
+  font-size: 14px;
+  transition: 0.3s;
 }
 .nav-item-custom a:hover {
-    color: #007bff;
-    background-color: #f8f9fa;
+  color: #007bff;
+  background-color: #f8f9fa;
 }
 
 /* Icon NEW (nếu cần) */
 .badge-new {
-    color: red;
-    font-size: 10px;
-    vertical-align: super;
-    margin-left: 2px;
+  color: red;
+  font-size: 10px;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+/* 1. Nền body màu xám nhạt */
+body {
+  background-color: #f4f4f4;
+}
+
+/* Class mới: Dùng cho danh sách dạng lưới (Grid) tự xuống dòng */
+.product-grid-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép xuống dòng */
+  gap: 15px;
+  padding: 10px 5px;
+  /* Không cần overflow-x: auto như wrapper cũ */
+}
+
+/* Container bao quanh danh sách sản phẩm để trượt ngang */
+.product-list-wrapper {
+  display: flex;
+  overflow-x: auto; /* Cho phép trượt ngang */
+  scroll-behavior: smooth;
+  gap: 15px; /* Khoảng cách giữa các sản phẩm */
+  padding-bottom: 10px; /* Chừa chỗ cho thanh cuộn (nếu có) */
+  padding-top: 10px;
+  /* Ẩn thanh cuộn mặc định (tùy chọn) */
+  scrollbar-width: thin;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp hơn trên Chrome/Webkit */
+.product-list-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.product-list-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+/* Card từng sản phẩm */
+.product-item-custom {
+  /* Tính toán để hiển thị đúng 5 sản phẩm 1 hàng: 100% / 5 = 20% */
+  /* Trừ đi gap để không bị rớt dòng */
+  flex: 0 0 calc(20% - 12px);
+  max-width: calc(20% - 12px);
+
+  background-color: #fff; /* Nền trắng */
+  border-radius: 8px; /* Bo góc */
+  overflow: hidden; /* Ẩn phần thừa */
+  transition: transform 0.3s ease;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.product-item-custom:hover {
+  transform: translateY(-5px); /* Nhẹ nhàng nổi lên khi hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Phần bao quanh ảnh để xử lý hover icon */
+.product-img-box {
+  position: relative;
+  width: 100%;
+  height: 250px; /* Chiều cao cố định cho ảnh đẹp hơn */
+  overflow: hidden;
+}
+
+.product-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Giữ tỉ lệ ảnh không bị méo */
+}
+
+/* Lớp phủ chứa kính lúp (mặc định ẩn) */
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* Màu tối mờ nhẹ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; /* Ẩn */
+  transition: opacity 0.3s ease;
+}
+
+/* Icon kính lúp */
+.hover-icon {
+  width: 45px;
+  height: 45px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Khi hover vào card thì hiện lớp phủ */
+.product-item-custom:hover .hover-overlay {
+  opacity: 1;
+}
+
+/* Responsive cho mobile: Hiển thị 2 sản phẩm 1 hàng để dễ nhìn */
+@media (max-width: 768px) {
+  .product-item-custom {
+    flex: 0 0 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+  }
+}
+
+/* Style cho text bên dưới */
+.product-info {
+  padding: 10px;
+}
+.product-title {
+  font-size: 14px;
+  margin-bottom: 5px;
+  height: 40px; /* Giới hạn chiều cao tên sp */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* Thuộc tính chuẩn để tránh warning */
+}
+.product-price {
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
 }

@@ -37,38 +37,80 @@ require_once('layouts/header.php');
 <!-- Banner STOP -->
     
     <div class="container">
-        <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">SẢN PHẨM MỚI NHẤT</h2>
-        <div class="row">
+        <h2 style="text-align: left; margin-top: 30px; margin-bottom: 13px; padding-left: 12px; font-size: 18px; font-weight: bold; text-transform: uppercase; border-left: 3px solid;">Sản phẩm mới nhất</h2>
+
+        <img src="assets/photos/banner-hang-moi.jpg" alt="Hàng mới" height="auto" width="100%" style="border-radius: 8px; margin-bottom: 13px">
+        
+        <div class="product-grid-wrapper">
             <?php
                 foreach($latestItems as $item) {
-                    echo '<div class="col-md-3 col-6 product-item">
-                            <img src="'.$item['thumbnail'].'" style="width: 100%; height: 220px">
-                            <p style="font-weight: 500;">'.$item['category_name'].'</p>
-                            <p style="font-weight: 500;">'.$item['title'].'</p>
-                            <p style="color: red; font-weight: 500;">'.number_format($item['discount']).' đ</p>
-                        </div>';
+                    echo '
+                    <div class="product-item-custom">
+                        <a href="detail.php?id='.$item['id'].'" style="text-decoration: none; color: inherit;">
+                            <div class="product-img-box">
+                                <img src="'.$item['thumbnail'].'" alt="'.$item['title'].'">
+                                
+                                <div class="hover-overlay">
+                                    <div class="hover-icon">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="product-info">
+                                <div style="display: flex; justify-content: space-between; align-items: center">
+                                    <span style="font-size: 12px; color: #888; margin-bottom: 2px;">'.$item['category_name'].'</span>
+                                    <span class="badge badge-light border">Hàng Mới</span>
+                                </div>
+                                
+                                <p class="product-title">'.$item['title'].'</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="product-price">'.number_format($item['discount']).'đ</span>
+                                    <i class="bi bi-bag"></i> </div>
+                            </div>
+                        </a>
+                    </div>';
                 }
             ?>
         </div>
         
         <!-- Danh mục sản phẩm -->
         <?php
-        foreach($menuItems as $item) {
-            $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = ".$item['id']." order by Product.updated_at desc limit 0,4";
-            $items = executeResult(sql: $sql);
-            if($items == null || count($items) < 4) continue;
+            foreach($menuItems as $item) {
+                $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = ".$item['id']." order by Product.updated_at desc limit 0,10"; 
+                // Lưu ý: Tăng limit lên 10 hoặc bỏ limit để test tính năng trượt ngang
+                
+                $items = executeResult($sql);
+                if($items == null || count($items) < 1) continue;
         ?>
-        <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;"><?=$item['name']?></h2>
-        <img src="<?= fixUrl($item['banner'], '') ?>" style="height: 216px; width: 100%"/>
-        <div class="row">
+        
+        <h2 style="text-align: left; margin-top: 40px; margin-bottom: 13px; padding-left: 12px; font-size: 18px; font-weight: bold; text-transform: uppercase; border-left: 3px solid;">Thời trang <?=$item['name']?></h2>
+        
+        <?php if(!empty($item['banner'])): ?>
+            <img src="<?= fixUrl($item['banner'], '') ?>" style="height: auto; width: 100%; border-radius: 8px; margin-bottom: 13px;"/>
+        <?php endif; ?>
+
+        <div class="product-list-wrapper">
             <?php
                 foreach($items as $pItem) {
-                    echo '<div class="col-md-3 col-6 product-item">
-                            <img src="'.$pItem['thumbnail'].'" style="width: 100%; height: 220px">
-                            <p style="font-weight: 500;">'.$pItem['category_name'].'</p>
-                            <p style="font-weight: 500;">'.$pItem['title'].'</p>
-                            <p style="color: red; font-weight: 500;">'.number_format($pItem['discount']).' đ</p>
-                        </div>';
+                    echo '
+                    <div class="product-item-custom">
+                        <a href="detail.php?id='.$pItem['id'].'" style="text-decoration: none; color: inherit;">
+                            <div class="product-img-box">
+                                <img src="'.$pItem['thumbnail'].'">
+                                <div class="hover-overlay">
+                                    <div class="hover-icon">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <p style="font-size: 12px; color: #888; margin-bottom: 2px;">'.$pItem['category_name'].'</p>
+                                <p class="product-title">'.$pItem['title'].'</p>
+                                <span class="product-price">'.number_format($pItem['discount']).'đ</span>
+                            </div>
+                        </a>
+                    </div>';
                 }
             ?>
         </div>
@@ -76,7 +118,6 @@ require_once('layouts/header.php');
         }
         ?>
     </div>
-
 <?php
 require_once('layouts/footer.php');
 ?>
