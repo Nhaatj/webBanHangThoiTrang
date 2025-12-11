@@ -1,0 +1,123 @@
+/* Đẩy nội dung trang xuống để không bị header che mất khi dùng position: fixed */
+body {
+  padding-top: 140px; /* Chiều cao ước lượng của header */
+  background-color: #f4f4f4;
+}
+
+/* Container bao quanh danh sách sản phẩm để trượt ngang */
+.product-list-wrapper {
+  display: flex;
+  overflow-x: auto; /* Cho phép trượt ngang */
+  scroll-behavior: smooth;
+  gap: 15px; /* Khoảng cách giữa các sản phẩm */
+  /* Ẩn thanh cuộn mặc định (tùy chọn) */
+  scrollbar-width: thin;
+
+  flex-wrap: wrap; /* Cho phép xuống dòng */
+  padding: 0px 5px;
+  padding-top: 10px;
+  /* padding-bottom: 10px; Chừa chỗ cho thanh cuộn (nếu có) */
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp hơn trên Chrome/Webkit */
+.product-list-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.product-list-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+/* BUTTONS */
+.button {
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  min-width: 130px;
+  background-color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid;
+  text-decoration: none;
+}
+
+/* --- CẤU HÌNH RIÊNG CHO SLIDER (OWL CAROUSEL) --- */
+
+/* Chỉ reset kích thước khi item nằm trong Owl Carousel (để Slider tự tính toán) */
+/* Phần "Sản phẩm mới nhất" nằm ngoài Owl Carousel nên vẫn giữ nguyên giao diện Grid */
+.owl-carousel .product-item-custom {
+  flex: 0 0 100%;
+  max-width: 100%;
+  margin-bottom: 0;
+}
+
+/* Ẩn thanh cuộn mặc định của wrapper cũ khi đã lên Slider */
+.product-list-wrapper {
+  overflow: hidden;
+  display: block;
+}
+
+/* Tùy chỉnh dấu chấm (Bullets) */
+.owl-theme .owl-dots .owl-dot span {
+  width: 8px;
+  height: 8px;
+  margin: 5px 4px;
+  background: #f4f4f4;
+  display: block;
+  transition: opacity 0.2s ease;
+  border-radius: 30px;
+  border: 1px solid;
+}
+
+.owl-theme .owl-dots .owl-dot.active span {
+  background: #000;
+  opacity: 1;
+}
+
+.owl-theme .owl-dots .owl-dot.active:hover span
+
+/* Tạo khoảng cách nhỏ giữa các item trong slider */
+.owl-carousel .item {
+  padding: 0 5px;
+}
+
+/* Style cho text bên dưới */
+.product-info {
+  padding: 10px;
+}
+.product-title {
+  font-size: 14px;
+  margin-bottom: 5px;
+  height: 40px; /* Giới hạn chiều cao tên sp */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* Thuộc tính chuẩn để tránh warning */
+}
+.product-discount {
+  color: red;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.product-price {
+  font-size: 12px;
+  color: #888;
+  margin-left: 5px;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #000;
+}

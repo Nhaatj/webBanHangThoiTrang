@@ -33,8 +33,14 @@ $latestItems = executeResult(sql: $sql);
     <!-- Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     
     <style type="text/css">
         .nav li {
@@ -113,7 +119,7 @@ $latestItems = executeResult(sql: $sql);
             <div class="container">
                 <ul class="nav-list">
                     <li class="nav-item-custom">
-                        <a href="index.php"><i class="fa fa-search" style="color: #007bff; margin-right: 5px;"></i> HÀNG MỚI <i class="badge-new fa fa-star"></i></a>
+                        <a href="category.php"><i class="fa fa-search" style="color: #007bff; margin-right: 5px;"></i> SẢN PHẨM<i class="badge-new fa fa-star"></i></a>
                     </li>
 
                     <?php foreach($menuItems as $item): ?>

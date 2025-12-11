@@ -64,9 +64,11 @@ require_once('layouts/header.php');
                                 </div>
                                 
                                 <p class="product-title">'.$item['title'].'</p>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span class="product-price">'.number_format($item['discount']).'đ</span>
-                                    <i class="bi bi-bag"></i> </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="product-discount">'.number_format($item['discount']).'đ</span>
+                                    <span class="product-price"><del>'.number_format($item['price']).'đ</del></span>
+                                    <i class="bi bi-bag"></i> 
+                                </div>
                             </div>
                         </a>
                     </div>';
@@ -84,13 +86,13 @@ require_once('layouts/header.php');
                 if($items == null || count($items) < 1) continue;
         ?>
         
-        <h2 style="text-align: left; margin-top: 40px; margin-bottom: 13px; padding-left: 12px; font-size: 18px; font-weight: bold; text-transform: uppercase; border-left: 3px solid;">Thời trang <?=$item['name']?></h2>
+        <h2 style="text-align: left; margin-top: 30px; margin-bottom: 13px; padding-left: 12px; font-size: 18px; font-weight: bold; text-transform: uppercase; border-left: 3px solid;">Thời trang <?=$item['name']?></h2>
         
         <?php if(!empty($item['banner'])): ?>
             <img src="<?= fixUrl($item['banner'], '') ?>" style="height: auto; width: 100%; border-radius: 8px; margin-bottom: 13px;"/>
         <?php endif; ?>
 
-        <div class="product-list-wrapper">
+        <div class="product-list-wrapper owl-carousel owl-theme">
             <?php
                 foreach($items as $pItem) {
                     echo '
@@ -107,17 +109,48 @@ require_once('layouts/header.php');
                             <div class="product-info">
                                 <p style="font-size: 12px; color: #888; margin-bottom: 2px;">'.$pItem['category_name'].'</p>
                                 <p class="product-title">'.$pItem['title'].'</p>
-                                <span class="product-price">'.number_format($pItem['discount']).'đ</span>
+                                <div style="display: flex; align-items: center">
+                                    <span class="product-discount">'.number_format($pItem['discount']).'đ</span>
+                                    <span class="product-price"><del>'.number_format($pItem['price']).'đ</del></span>
+                                </div>
                             </div>
                         </a>
                     </div>';
                 }
             ?>
         </div>
+
+        <div style="display: flex; align-items: center; justify-content: center">
+            <a class="button" href="category.php?id=<?=$item['id']?>">Xem tất cả »</a>
+        </div>
         <?php
         }
         ?>
     </div>
+
+<script>
+    $(document).ready(function(){
+        $(".product-list-wrapper").owlCarousel({
+            loop: false,        // Không lặp lại vô tận
+            margin: 15,         // Khoảng cách giữa các sản phẩm
+            nav: false,         // Tắt mũi tên điều hướng (Next/Prev)
+            dots: true,         // BẬT BULLETS (Dấu chấm)
+            mouseDrag: true,    // BẬT NẮM KÉO CHUỘT
+            touchDrag: true,    // Bật cảm ứng vuốt trên điện thoại
+            responsive: {
+                0: {
+                    items: 2    // Điện thoại: Hiện 2 sản phẩm
+                },
+                600: {
+                    items: 3    // Tablet: Hiện 3 sản phẩm
+                },
+                1000: {
+                    items: 5    // Máy tính: Hiện 5 sản phẩm
+                }
+            }
+        });
+    });
+</script>
 <?php
 require_once('layouts/footer.php');
 ?>
