@@ -2,6 +2,17 @@
 body {
   padding-top: 140px; /* Chiều cao ước lượng của header */
   background-color: #f4f4f4;
+  box-sizing: border-box;
+}
+
+/* Class mới: Dùng cho danh sách dạng lưới (Grid) tự xuống dòng */
+
+.product-grid-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép xuống dòng */
+  gap: 15px;
+  padding: 10px 5px;
+  /* Không cần overflow-x: auto như wrapper cũ */
 }
 
 /* Container bao quanh danh sách sản phẩm để trượt ngang */
