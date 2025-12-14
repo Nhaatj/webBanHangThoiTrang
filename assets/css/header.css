@@ -89,12 +89,19 @@ header {
   color: #000;
   border-radius: 50%;
   font-size: 9px;
-  width: 14px;
-  height: 14px;
-  display: flex;
-
   font-weight: bold;
-  padding: 0 4.8px;
+
+  /* Kích thước cố định */
+  width: 16px;
+  height: 16px;
+
+  /* Căn giữa tuyệt đối bằng Flexbox */
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+
+  /* Quan trọng: Bỏ padding cũ đi để không bị lệch */
+  padding: 0;
 }
 
 /* 2. Phần Menu (Màu trắng) */

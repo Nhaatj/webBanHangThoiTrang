@@ -116,12 +116,12 @@ $latestItems = executeResult(sql: $sql);
 
             <div style="display: flex; align-items: center; margin-top: 20px; justify-content: space-between; height: 45px">
               <div style="display: flex; align-items: center; height: 100%;">
-                <button class="btn btn-light" style="height: 100%; border: solid #e0dede 1px; border-radius: 0px; font-weight: bold;">-</button>
-                <input class="form-control no-arrow" type="number" step="1" value="1" style="height: 100%; max-width: 90px; border: solid #e0dede 1px; border-radius: 0px; text-align: center; font-weight: bold;">
-                <button class="btn btn-light" style="height: 100%; border: solid #e0dede 1px; border-radius: 0px; font-weight: bold;">+</button>
+                <button class="btn btn-light" style="height: 100%; border: solid #e0dede 1px; border-radius: 0px; font-weight: bold;" onclick="addMoreCart(-1)">-</button>
+                <input class="form-control no-arrow" type="number" name="num" step="1" value="1" style="height: 100%; max-width: 70px; border: solid #e0dede 1px; border-radius: 0px; text-align: center; font-weight: bold;" onchange="fixCartNum()">
+                <button class="btn btn-light" style="height: 100%; border: solid #e0dede 1px; border-radius: 0px; font-weight: bold;" onclick="addMoreCart(1)">+</button>
               </div>
 
-              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px">THÊM VÀO GIỎ</button>
+              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px" onclick="addCart(<?= $product['id'] ?>, $('input[name=num]').val())">THÊM VÀO GIỎ</button>
 
               <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px">MUA NGAY</button>
             </div>
@@ -162,9 +162,17 @@ $latestItems = executeResult(sql: $sql);
                             </div>
                             
                             <p class="product-title">'.$item['title'].'</p>
-                            <div style="display: flex; align-items: center;">
-                                <span class="product-discount">'.number_format($item['discount']).'đ</span>
-                                <span class="product-price"><del>'.number_format($item['price']).'đ</del></span>
+                            <div style="display: flex; align-items: center; justify-content: space-between">
+                                <div>
+                                    <span class="product-discount">'.number_format($item['discount']).'<u>đ</u></span>
+                                    <span class="product-price"><del>'.number_format($item['price']).'<u>đ</u></del></span>
+                                </div>
+                                <button style="border: none; background-color: transparent" onclick="addCart('.$item['id'].', 1)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>
+                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                                    </svg>
+                                </button>
                             </div>    
                         </div>
                     </a>
@@ -173,6 +181,20 @@ $latestItems = executeResult(sql: $sql);
         ?>
     </div>
 </div>
+
+<script type="text/javascript">
+  function addMoreCart(delta) {
+    num = parseInt($('input[name=num]').val());
+    num += delta;
+    if (num < 1) num = 1;
+    if (num > 9999) num = 9999;
+    $('input[name=num]').val(num);
+  }
+
+  function fixCartNum() {
+    $('input[name=num]').val(Math.abs($('input[name=num]').val()));
+  }
+</script>
 
 <?php
 require_once('layouts/footer.php');

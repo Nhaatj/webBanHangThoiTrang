@@ -103,11 +103,21 @@ $latestItems = executeResult(sql: $sql);
                                 <span>Đăng nhập</span>
                             </a>
 
+                            <?php
+                            if(!isset($_SESSION['cart'])){
+                                $_SESSION['cart'] = [];
+                            }
+                            $count = 0;
+                            foreach($_SESSION['cart'] as $item) {
+                                $count += $item['num'];
+                            }
+                            ?>
+                            <!-- GIỎ HÀNG -->
                             <a href="cart.php" class="action-item">
                                 <!-- <img src="https://cdn.hstatic.net/themes/1000253775/1001427348/14/shopping-cart.svg?v=293" width="24px" height="24px"> -->
                                 <ion-icon name="cart-outline" style="width: 24px; height: 24px;"></ion-icon>
                                 <span>Giỏ hàng</span>
-                                <span class="cart-count">0</span>
+                                <span class="cart-count"><?= $count ?></span>
                             </a>
                         </div>
                     </div>

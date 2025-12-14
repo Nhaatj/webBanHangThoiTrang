@@ -52,6 +52,22 @@
             </div>
         </div>
     </footer>
+<script type="text/javascript">
+  function addCart(productId, num) {
+    // console.log(productId + ", " + num);
+    
+    // ajax là công nghệ sử dụng js tương tác với server (database) mà không cần reload lại trang.
+    // ajax của jquery:
+    $.post('api/ajax_request.php', {
+      'action': 'cart',
+      'id': productId,
+      'num': num
+    }, function(data) {
+      location.reload()
+    })
+
+  }
+</script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
