@@ -4,6 +4,7 @@ $baseUrl = '../';
 require_once('../layouts/header.php');
 
 $id = $thumbnail = $title = $price = $discount = $category_id = $description = '';
+$sizes = [];
 require_once('form_save.php');
 
 $id = getGet('id');
@@ -17,6 +18,19 @@ if ($id != '' && $id > 0) {
         $discount = $userItem['discount'];
         $category_id = $userItem['category_id'];
         $description = $userItem['description'];
+
+        // --- THÊM ĐOẠN NÀY ---
+        // Nếu trong DB có dữ liệu thì decode JSON, nếu không thì để mảng rỗng
+        if (!empty($userItem['sizes'])) {
+            $sizes = json_decode($userItem['sizes'], true); // biến chuối kí tự thành dạng mảng ('[S, M, L]' -> [S,M,L])
+            // Giả sử $userItem['sizes'] chứa chuỗi JSON sau: '{"dai": 100, "rong": 50}'
+            // Kết quả là Mảng (Array):
+            // [
+            //    "dai" => 100,
+            //    "rong" => 50
+            // ]
+        }
+        // ---------------------
     } else {
         $id = 0;
     }
@@ -64,6 +78,26 @@ $categoryItems = executeResult($sql);
 
                             <div class="form-group">
                                 <img id="thumbnail_img" src="<?= ($thumbnail != '') ? fixUrl($thumbnail, '../../') : 'https://placehold.co/600x400?text=No+Image' ?>" style="max-height: 160px; margin-top: 5px; margin-bottom: 10px; max-width: 100%; object-fit: contain; border: 1px solid #ccc;">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Size:</label>
+                                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                    <?php 
+                                    // Danh sách các size định nghĩa sẵn
+                                    $availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+
+                                    foreach ($availableSizes as $sizeItem) {
+                                        // Kiểm tra xem size này đã được chọn trước đó chưa
+                                        $checked = in_array($sizeItem, $sizes) ? 'checked' : '';
+                                        echo '
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="size_'.$sizeItem.'" name="sizes[]" value="'.$sizeItem.'" '.$checked.'>
+                                            <label class="custom-control-label" for="size_'.$sizeItem.'">'.$sizeItem.'</label>
+                                        </div>';
+                                    }
+                                    ?>
+                                </div>
                             </div>
 
                             <div class="form-group">

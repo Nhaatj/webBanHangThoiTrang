@@ -66,8 +66,8 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$item['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                     <div>
-                                        <span class="product-discount">'.number_format($item['discount']).'<u>đ</u></span>
-                                        <span class="product-price"><del>'.number_format($item['price']).'<u>đ</u></del></span>
+                                        <span class="product-discount">'.number_format($item['discount']).'<sup><u>đ</u></sup></span>
+                                        <span class="product-price"><del>'.number_format($item['price']).'<sup><u>đ</u></sup></del></span>
                                     </div>
                                     <button style="border: none; background-color: transparent" onclick="addCart('.$item['id'].', 1)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
@@ -118,8 +118,8 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$pItem['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                     <div>
-                                        <span class="product-discount">'.number_format($pItem['discount']).'<u>đ</u></span>
-                                        <span class="product-price"><del>'.number_format($pItem['price']).'<u>đ</u></del></span>
+                                        <span class="product-discount">'.number_format($pItem['discount']).'<sup><u>đ</u></sup></span>
+                                        <span class="product-price"><del>'.number_format($pItem['price']).'<sup><u>đ</u></sup></del></span>
                                     </div>
                                     <button style="border: none; background-color: transparent" onclick="addCart('.$pItem['id'].', 1)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">

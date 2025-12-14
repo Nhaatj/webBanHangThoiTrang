@@ -53,20 +53,24 @@
         </div>
     </footer>
 <script type="text/javascript">
-  function addCart(productId, num) {
-    // console.log(productId + ", " + num);
-    
-    // ajax là công nghệ sử dụng js tương tác với server (database) mà không cần reload lại trang.
-    // ajax của jquery:
-    $.post('api/ajax_request.php', {
-      'action': 'cart',
-      'id': productId,
-      'num': num
-    }, function(data) {
-      location.reload()
-    })
+    function addCart(productId, num, size) {
+        // console.log(productId + ", " + num + ", " + size);
+        // Nếu size không được truyền vào (ví dụ bấm từ trang chủ), mặc định là chuỗi rỗng
+        if (size === undefined) {
+            size = '';
+        }
 
-  }
+        // ajax là công nghệ sử dụng js tương tác với server (database) mà không cần reload lại trang.
+        // ajax của jquery:
+        $.post('api/ajax_request.php', {
+        'action': 'cart',
+        'id': productId,
+        'num': num,
+        'size': size
+        }, function(data) {
+        location.reload()
+        })
+    }
 </script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

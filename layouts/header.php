@@ -66,6 +66,10 @@ $latestItems = executeResult(sql: $sql);
         .product-item {
             margin-bottom: 10px;
         }
+
+        sup {
+            font-size: 65%;
+        }
     </style>
 </head>
 <body>

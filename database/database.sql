@@ -97,3 +97,5 @@ ALTER TABLE `Orders` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`);
 ALTER TABLE `Tokens` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`);
 
 ALTER TABLE Category ADD banner VARCHAR(500) NULL;
+
+ALTER TABLE `Product` ADD `sizes` VARCHAR(255) NULL AFTER `description`;

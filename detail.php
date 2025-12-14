@@ -59,6 +59,7 @@ $latestItems = executeResult(sql: $sql);
     color: grey;
     margin-left: 5px;
     margin-bottom: 0;
+    
   }
 
   /* Ẩn mũi tên tăng giảm trên Chrome, Safari, Edge, Opera */
@@ -72,6 +73,29 @@ $latestItems = executeResult(sql: $sql);
   .no-arrow {
       -moz-appearance: textfield;
   }
+
+  /* CSS cho nút Size */
+    .size-btn {
+        border: 1px solid #ddd;
+        padding: 5px 15px;
+        margin-right: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        font-weight: 500;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .size-btn:hover {
+        border-color: #000;
+    }
+
+    /* Khi được chọn (Active) */
+    .size-btn.active {
+        background-color: #000;
+        color: #fff;
+        border-color: #000;
+    }
 </style>
 <div class="container">
     <ul class="breadcrumb" style="text-decoration: none">
@@ -110,9 +134,35 @@ $latestItems = executeResult(sql: $sql);
             </div>
 
             <div style="display: flex; align-items: center; margin-top: 10px">
-              <p class="discount"><?= number_format($product['discount']) ?> đ</p>
-              <p class="price"><del><?= number_format($product['price']) ?> đ</del></p>
+              <p class="discount"><?= number_format($product['discount']) ?><sup><u>đ</u></sup></p>
+              <p class="price"><del><?= number_format($product['price']) ?><sup><u>đ</u></sup></del></p>
             </div>
+
+            <?php
+            $sizes = [];
+            if (!empty($product['sizes'])) {
+                $sizes = json_decode($product['sizes'], true);
+            }
+
+            if (is_array($sizes) && count($sizes) > 0) {
+                // Lấy size đầu tiên làm mặc định
+                $defaultSize = $sizes[0];
+            ?>
+                <div style="margin-top: 15px;">
+                    <p style="font-weight: bold; margin-bottom: 5px;">Kích thước:</p>
+                    <div style="display: flex;">
+                        <?php foreach ($sizes as $index => $size): ?>
+                            <span class="size-btn <?= ($index == 0) ? 'active' : '' ?>" 
+                                onclick="selectSize(this, '<?=$size?>')">
+                                <?=$size?>
+                            </span>
+                        <?php endforeach; ?>
+                    </div>
+                    <input type="hidden" id="selected_size" name="selected_size" value="<?= $defaultSize ?>">
+                </div>
+            <?php 
+            } 
+            ?>
 
             <div style="display: flex; align-items: center; margin-top: 20px; justify-content: space-between; height: 45px">
               <div style="display: flex; align-items: center; height: 100%;">
@@ -121,7 +171,7 @@ $latestItems = executeResult(sql: $sql);
                 <button class="btn btn-light" style="height: 100%; border: solid #e0dede 1px; border-radius: 0px; font-weight: bold;" onclick="addMoreCart(1)">+</button>
               </div>
 
-              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px" onclick="addCart(<?= $product['id'] ?>, $('input[name=num]').val())">THÊM VÀO GIỎ</button>
+              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px" onclick="addCartWithSize(<?= $product['id'] ?>)">THÊM VÀO GIỎ</button>
 
               <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px">MUA NGAY</button>
             </div>
@@ -148,7 +198,7 @@ $latestItems = executeResult(sql: $sql);
                     <a href="detail.php?id='.$item['id'].'" style="text-decoration: none; color: inherit;">
                         <div class="product-img-box">
                             <img src="'.$item['thumbnail'].'" alt="'.$item['title'].'">
-                            
+
                             <div class="hover-overlay">
                                 <div class="hover-icon">
                                     <i class="fa fa-search"></i>
@@ -164,10 +214,10 @@ $latestItems = executeResult(sql: $sql);
                             <p class="product-title">'.$item['title'].'</p>
                             <div style="display: flex; align-items: center; justify-content: space-between">
                                 <div>
-                                    <span class="product-discount">'.number_format($item['discount']).'<u>đ</u></span>
-                                    <span class="product-price"><del>'.number_format($item['price']).'<u>đ</u></del></span>
+                                    <span class="product-discount">'.number_format($item['discount']).'<sup><u>đ</u></sup></span>
+                                    <span class="product-price"><del>'.number_format($item['price']).'<sup><u>đ</u></sup></del></span>
                                 </div>
-                                <button style="border: none; background-color: transparent" onclick="addCart('.$item['id'].', 1)">
+                                <button style="border: none; background-color: transparent" onclick="event.preventDefault(); event.stopPropagation(); addCart('.$item['id'].', 1)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>
                                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
@@ -177,26 +227,77 @@ $latestItems = executeResult(sql: $sql);
                         </div>
                     </a>
                 </div>';
-            }
+              }
         ?>
     </div>
 </div>
 
 <script type="text/javascript">
-  function addMoreCart(delta) {
-    num = parseInt($('input[name=num]').val());
-    num += delta;
-    if (num < 1) num = 1;
-    if (num > 9999) num = 9999;
-    $('input[name=num]').val(num);
-  }
+    function addMoreCart(delta) {
+        num = parseInt($('input[name=num]').val());
+        num += delta;
+        if (num < 1) num = 1;
+        if (num > 9999) num = 9999;
+        $('input[name=num]').val(num);
+    }
 
-  function fixCartNum() {
-    $('input[name=num]').val(Math.abs($('input[name=num]').val()));
-  }
+    function fixCartNum() {
+        $('input[name=num]').val(Math.abs($('input[name=num]').val()));
+    }
+
+    function selectSize(element, size) {
+        // 1. Xóa class active ở tất cả các nút size
+        $('.size-btn').removeClass('active');
+
+        // 2. Thêm class active vào nút vừa click
+        $(element).addClass('active');
+
+        // 3. Gán giá trị vào input ẩn (để sau này gửi lên server khi thêm vào giỏ)
+        $('#selected_size').val(size);
+
+        console.log("Đã chọn size: " + size);
+    }
+
+    // Chờ website tải xong để đảm bảo hàm test đã tồn tại
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lấy giá trị thực tế đang nằm trong thẻ input để in ra
+        let currentVal = document.getElementById('selected_size').value;
+        test(currentVal);
+    });
+    function test(defSize) { 
+        console.log("Size mặc định: " + defSize);
+    }
 </script>
 
 <?php
 require_once('layouts/footer.php');
 ?>
+
+<!-- 
+S,M,L
+<span class="size-btn" onclick="selectSize(this, 'S')">S</span>
+<span class="size-btn" onclick="selectSize(this, 'M')">M</span>
+<span class="size-btn" onclick="selectSize(this, 'L')">L</span>
+
+Chọn <span class="size-btn" onclick="selectSize(this, 'L')">L</span>
+  selectSize(element, size):
+    $('.size-btn').removeClass('active');
+        (Chưa có thẻ chứa class "size-btn" nào active -> Bỏ qua)
+    $(element).addClass('active');
+        <span class="size-btn active" onclick="selectSize(this, 'L')">L</span>
+    $('#selected_size').val(size);
+        <input type="hidden" id="selected_size" name="selected_size" value="L"> 
+
+Chọn <span class="size-btn" onclick="selectSize(this, 'M')">M</span>
+  selectSize(element, size):
+    $('.size-btn').removeClass('active');
+        1 thẻ có "active": <span class="size-btn active" onclick="selectSize(this, 'L')">L</span>
+        -> Bỏ "active" <span class="size-btn" onclick="selectSize(this, 'L')">L</span>
+    $(element).addClass('active');
+        <span class="size-btn active" onclick="selectSize(this, 'M')">M</span>
+    $('#selected_size').val(size);
+        <input type="hidden" id="selected_size" name="selected_size" value="M"> 
+-->
+
+
 

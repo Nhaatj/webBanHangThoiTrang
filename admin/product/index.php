@@ -18,11 +18,13 @@ $data = executeResult($sql);
         <table class="table table-bordered table-hover" style="margin-top: 10px;">
             <thead>
                 <tr>
-                    <th>STT</th>
-                    <th>Thumbnail</th>
+                    <th style="width: 50px">STT</th>
+                    <th style="width: 80px">Thumbnail</th>
                     <th>Tên Sản Phẩm</th>
-                    <th>Giá</th>
-                    <th>Danh Mục</th>
+                    <th style="width: 100px">Danh Mục</th>
+                    <th style="width: 150px">Size</th>
+                    <th style="width: 100px">Giá Gốc</th>
+                    <th style="width: 100px">Giá Giảm</th>
                     <th style="width: 50px"></th>
                     <th style="width: 50px"></th>
                 </tr>
@@ -31,12 +33,24 @@ $data = executeResult($sql);
                 <?php
                 $index = 0;
                 foreach ($data as $item) {
+                    // --- XỬ LÝ SIZE ---
+                        $sizeStr = '';
+                        if (!empty($item['sizes'])) {
+                            $sizes = json_decode($item['sizes'], true);
+                            if (is_array($sizes)) {
+                                $sizeStr = implode(', ', $sizes); // Nối mảng thành chuỗi: S, M, L
+                            }
+                        }
+                    // ------------------
+
                     echo '<tr>
                             <td>' . (++$index) . '</td>
                             <td><img src="' . fixUrl($item['thumbnail'], '../../') . '" style="height: 100px;"/></td>
                             <td>' . $item['title'] . '</td>
-                            <td>' . number_format($item['discount']). ' đ</td>
                             <td>' . $item['category_name'] . '</td>
+                            <td>' . $sizeStr . '</td>
+                            <td>' . number_format($item['price']). ' đ</td>
+                            <td>' . number_format($item['discount']). ' đ</td>
                             <td style="width: 50px">
                                 <a href="editor.php?id=' . $item['id'] . '"><button class="btn btn-warning">Sửa</button></a>
                             </td>
