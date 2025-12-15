@@ -12,13 +12,6 @@ $sql = "select Product.*, Category.name as category_name from Product left join 
 $latestItems = executeResult(sql: $sql);
 ?>
 <style>
-  .breadcrumb{
-    padding: 0 5px;
-    padding-left: 0;
-    background-color: transparent;
-    margin-bottom: 8px;
-  }
-
   .thumbnail {
     width: 510px;
     height: 80vh;

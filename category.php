@@ -4,15 +4,32 @@ require_once('layouts/header.php');
 $category_id = getGet('id');
 
 if($category_id == null || $category_id == ''){
-  $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id order by Product.updated_at desc";
+    $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id order by Product.updated_at desc";
+    $category = [];
 } else {
-  $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = $category_id order by Product.updated_at desc";
+    $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = $category_id order by Product.updated_at desc";
+    $category = executeResult("select * from Category where Category.id = $category_id", true);
 }
 
 $latestItems = executeResult($sql);
 ?> 
 <div class="container">
-    <img src="assets/photos/banner-hang-moi.jpg" alt="Hàng mới" height="auto" width="100%" style="border-radius: 8px; margin-bottom: 13px">
+    <ul class="breadcrumb" style="text-decoration: none">
+        <li>
+            <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>
+        </li>
+        <?php if(count($category) > 0) {?>
+            <li> &nbsp;&nbsp;/&nbsp;&nbsp;<?= $category['name'] ?> </li>
+        <?php } else { ?>
+            <li> &nbsp;&nbsp;/&nbsp;&nbsp;Tất Cả Sản Phẩm </li>       
+        <?php } ?>
+    </ul>
+    
+    <?php if(count($category) > 0) {?>
+        <img src="<?= $category['banner'] ?>" alt="Tất cả sản phẩm" height="auto" width="100%" style="border-radius: 8px; margin-bottom: 13px">
+    <?php } else { ?>
+        <img src="assets/photos/banner-hang-moi.jpg" alt="Sản phẩm theo thể loại" height="auto" width="100%" style="border-radius: 8px; margin-bottom: 13px">
+    <?php } ?>
     
     <div class="product-grid-wrapper">
         <?php

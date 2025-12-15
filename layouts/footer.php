@@ -233,5 +233,7 @@
     }
     </script>
     <!-- Xử lý Quick View popup STOP -->
+
+    <div id="page-overlay"></div>
 </body>
 </html>

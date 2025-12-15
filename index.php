@@ -3,7 +3,7 @@ require_once('layouts/header.php');
 ?>
 
 <!-- Banner START -->
-    <div id="demo" class="carousel slide container" data-ride="carousel">
+    <div id="demo" class="carousel slide container" data-ride="carousel" style="padding-top: 10px">
 
         <!-- Indicators -->
         <ul class="carousel-indicators">
@@ -68,8 +68,8 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$item['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                     <div>
-                                        <span class="product-discount">'.number_format($item['discount']).'<u>đ</u></span>
-                                        <span class="product-price"><del>'.number_format($item['price']).'<u>đ</u></del></span>
+                                        <span class="product-discount">'.number_format($item['discount']).'<sup><u>đ</u></sup></span>
+                                        <span class="product-price"><del>'.number_format($item['price']).'<sup><u>đ</u></sup></del></span>
                                     </div>
                                     
                                     <button style="border: none; background-color: transparent" 

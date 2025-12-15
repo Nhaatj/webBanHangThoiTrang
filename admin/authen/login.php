@@ -6,6 +6,7 @@ require_once('../../database/dbhelper.php');
 require_once('process_form_login.php');
 
 $user = getUserToken();
+
 if ($user != null) {
 	header('Location: ../');
 	die();
@@ -18,7 +19,7 @@ if ($user != null) {
 <head>
 	<title>Registation Form * Form Tutorial</title>
 	<meta charset="utf-8">
-	<link rel="icon" type="image/png" href="https://gokisoft.com/uploads/2021/03/s-568-ico-web.jpg" />
+	<link rel="icon" type="image/png" href="../../assets/photos/logo.jpg" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

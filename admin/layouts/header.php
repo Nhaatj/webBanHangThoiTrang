@@ -4,8 +4,19 @@ require_once($baseUrl.'../utils/utility.php');
 require_once($baseUrl.'../database/dbhelper.php');
 
 $user = getUserToken();
+
+// 1. Chưa đăng nhập -> Đá về trang login
 if($user == null) {
     header('Location: '.$baseUrl.'authen/login.php');
+    die();
+}
+
+// 2. Đã đăng nhập nhưng KHÔNG PHẢI ADMIN (role_id != 1) -> Đá về trang chủ Shop
+// Giả định: role_id = 1 là Admin, role_id = 2 là User/Khách hàng
+if($user['role_id'] != 1) {
+    // $baseUrl đang là đường dẫn tương đối trong admin (vd: '../' hoặc '')
+    // Nối thêm '../index.php' để ra thư mục gốc (Trang chủ Shop)
+    header('Location: '.$baseUrl.'../index.php');
     die();
 }
 ?>
@@ -36,7 +47,7 @@ if($user == null) {
 </head>
 <body>
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">M&N</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="<?=$baseUrl?>../index.php">M&N</a>
     <input class="form-control form-control-dark w-100" type="text" placeholder="Tìm kiếm" aria-label="Search">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">

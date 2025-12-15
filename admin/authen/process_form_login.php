@@ -24,7 +24,12 @@ if (!empty($_POST)) {
         $sql = "insert into Tokens (user_id, token, created_at) values ('$userId','$token', '$created_at')";
         execute($sql);
 
-        header(header: 'Location:../');
+        // Phân quyền hướng đi sau khi đăng nhập
+        if ($userExist['role_id'] == 1) {
+            header('Location: ../index.php'); // Admin vào trang quản trị
+        } else {
+            header('Location: ../../index.php'); // Khách hàng về trang chủ Shop
+        }
         die();
     }
 }
