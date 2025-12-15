@@ -38,21 +38,7 @@ function addToCart() {
     $product = executeResult($sql, true);
     $product['num'] = $num;
     $product['size'] = $size; // 3. Lưu thông tin size vào sản phẩm trong giỏ
-    
+
     $_SESSION['cart'][] = $product;
   }
-}
-
-function addCartWithSize(productId) {
-    var num = $('input[name=num]').val();
-    var size = $('#selected_size').val(); // Lấy giá trị từ input ẩn (đã tạo ở bài trước)
-
-    // Kiểm tra: Nếu sản phẩm có hiển thị nút chọn size mà khách chưa chọn
-    if ($('.size-btn').length > 0 && size == '') {
-        alert('Vui lòng chọn kích thước sản phẩm!');
-        return; // Dừng lại, không gửi đi
-    }
-
-    // Gọi hàm gốc ở footer để gửi đi
-    addCart(productId, num, size);
 }

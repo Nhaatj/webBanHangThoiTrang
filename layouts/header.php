@@ -114,6 +114,11 @@ $latestItems = executeResult(sql: $sql);
                             $count = 0;
                             foreach($_SESSION['cart'] as $item) {
                                 $count += $item['num'];
+                                // Kiểm tra ngay sau khi cộng
+                                if($count > 999) {
+                                    $count = 999;
+                                    break; // Dừng vòng lặp luôn cho đỡ tốn tài nguyên
+                                }
                             }
                             ?>
                             <!-- GIỎ HÀNG -->
