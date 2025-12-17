@@ -166,7 +166,7 @@ $latestItems = executeResult(sql: $sql);
 
               <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px" onclick="addCartWithSize(<?= $product['id'] ?>)">THÊM VÀO GIỎ</button>
 
-              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px">MUA NGAY</button>
+              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px" onclick="addCartWithSize(<?= $product['id'] ?>)"><a href="cart.php">MUA NGAY</a></button>
             </div>
         </div>
 

@@ -1,146 +1,208 @@
 <?php
 require_once('layouts/header.php');
-// Giả lập dữ liệu giỏ hàng để test (Bạn hãy xóa đoạn này khi chạy thật với session của bạn)
-// $_SESSION['cart'] = []; // Bỏ comment dòng này để test trường hợp Giỏ hàng trống
+
+// Kiểm tra đăng nhập
+$isLoggedIn = isset($user) && $user != null;
+$fullname = $isLoggedIn ? $user['fullname'] : '';
+$email = $isLoggedIn ? $user['email'] : '';
+$phone_number = $isLoggedIn ? $user['phone_number'] : '';
+$address = $isLoggedIn ? $user['address'] : '';
+
+// --- PHẦN MỚI: TÍNH TOÁN TỔNG TIỀN VÀ PHÍ SHIP NGAY ĐẦU FILE ---
+$total_money = 0;
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $total_money += $item['discount'] * $item['num'];
+    }
+}
+
+// Logic phí vận chuyển
+$shipping_fee = 20000; // Mặc định phí ship 20k
+if ($total_money >= 299000) {
+    $shipping_fee = 0; // Trên 299k thì miễn phí
+}
+
+// Nếu giỏ hàng trống thì phí ship hiển nhiên là 0
+if ($total_money == 0) {
+    $shipping_fee = 0;
+}
+
+// Tổng tiền thanh toán cuối cùng
+$final_total = $total_money + $shipping_fee;
+// ----------------------------------------------------------------
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ hàng & Thanh toán</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .cart-scroll-container {
+        max-height: 450px;
+        overflow-y: auto;
+        padding-right: 5px;
+        scrollbar-width: none;
+    }
+    .cart-scroll-container::-webkit-scrollbar { 
+        display: none; 
+    }
     
-    <style>
-        /* 1. Phần cuộn chuột nhưng ẩn thanh scrollbar */
-        .cart-scroll-container {
-            max-height: 400px; /* Chiều cao cố định để kích hoạt cuộn */
-            overflow-y: auto;  /* Cho phép cuộn dọc */
-            
-            /* Ẩn thanh cuộn trên Chrome, Safari, Edge */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE 10+ */
-        }
-        .cart-scroll-container::-webkit-scrollbar { 
-            display: none; /* Chrome/Safari/Webkit */
-        }
+    .cart-item {
+        background: #fff;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .item-img {
+        width: 80px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #eee;
+    }
+    
+    .qty-input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ddd;
+        height: 30px;
+        font-size: 14px;
+    }
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ddd;
+        background: #fff;
+        cursor: pointer;
+    }
 
-        /* 2. Style cho item trong giỏ hàng */
-        .cart-item {
-            background: #fff;
-            padding: 10px 0;
-            border-bottom: 1px dashed #ddd;
-        }
-        .item-img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
+    .cart-summary {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    
+    .section-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 16px;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 5px;
+        display: inline-block;
+    }
+
+    .btn-checkout {
+        background-color: #000;
+        color: #fff;
+        font-weight: bold;
+        border: 1px solid #000;
+    }
+    .btn-checkout:hover {
+        background-color: #fff;
+        color: #000;
+    }
+    .btn-checkout:disabled {
+        background-color: #ccc;
+        border-color: #ccc;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="container" style="margin-top: 20px; margin-bottom: 50px;">
+    <ul class="breadcrumb" style="background: transparent; padding-left: 0;">
+        <li class="breadcrumb-item"><a href="index.php" style="color: #333; text-decoration: none;">Trang Chủ</a></li>
+        <li class="breadcrumb-item active">Giỏ hàng & Thanh toán</li>
+    </ul>
+
+    <form action="process_order.php" method="POST">
+        <input type="hidden" name="shipping_fee" value="<?= $shipping_fee ?>">
         
-        /* 3. Style cho phần Empty Cart */
-        .empty-cart-icon {
-            width: 150px;
-            margin-bottom: 20px;
-        }
-
-        /* 4. Các tinh chỉnh khác */
-        .section-header {
-            font-weight: bold;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .btn-checkout {
-            background-color: #000; /* Màu đỏ giống hình */
-            color: white;
-            font-weight: bold;
-        }
-        .btn-checkout:hover {
-            background-color: #fff;
-            color: black;
-            box-shadow: inset 0 0 0 2px #000
-        }
-        .bg-light-gray {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-    </style>
-</head>
-<body class="bg-light-gray">
-
-<div class="container py-5">
-    <form action="process_order.php" method="POST"> <div class="row">
-            
-            <div class="col-md-7 pe-md-5">
-                <h5 class="section-header">Thông tin đơn hàng</h5>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="fullname" placeholder="Họ và tên" required>
+        <div class="row">
+            <div class="col-md-7 mb-4">
+                <h4 class="section-title">Thông tin đơn hàng</h4>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="fullname" placeholder="Họ và tên người nhận" value="<?=$fullname?>" required>
                 </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="phone" placeholder="Số điện thoại" required>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input type="text" class="form-control" name="phone_number" placeholder="Số điện thoại" value="<?=$phone_number?>" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <input type="email" class="form-control" name="email" placeholder="Email (nếu có)" value="<?=$email?>">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="address" placeholder="Địa chỉ" required>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="address" placeholder="Địa chỉ giao hàng" value="<?=$address?>" required>
                 </div>
-                <div class="mb-3">
-                    <textarea class="form-control" name="note" placeholder="Ghi chú thêm (Ví dụ: giao hàng giờ hành chính)"></textarea>
+                <div class="form-group">
+                    <textarea class="form-control" name="note" rows="2" placeholder="Ghi chú..."></textarea>
                 </div>
 
-                <h5 class="section-header mt-4">Phương thức vận chuyển</h5>
+                <h4 class="section-title mt-4">Phương thức vận chuyển</h4>
                 <div class="card p-3 mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="shipping" id="freeship" checked>
-                        <label class="form-check-label" for="freeship">
-                            Freeship đơn hàng
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="shipping1" name="shipping_method" class="custom-control-input" checked>
+                        <label class="custom-control-label d-flex justify-content-between align-items-center" for="shipping1" style="width: 100%;">
+                            <?php if($shipping_fee == 0): ?>
+                                <span>Freeship đơn hàng</span>
+                                <span class="font-weight-bold text-success">Miễn phí</span>
+                            <?php else: ?>
+                                <span>Phí ship đơn hàng</span>
+                                <span class="font-weight-bold"><?= number_format($shipping_fee, 0, ',', '.') ?>₫</span>
+                            <?php endif; ?>
                         </label>
                     </div>
                 </div>
 
-                <h5 class="section-header mt-4">Hình thức thanh toán</h5>
-                <div class="card p-3">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="payment" id="cod" value="cod" checked>
-                        <label class="form-check-label" for="cod">
-                            <i class="fas fa-money-bill-wave text-warning me-2"></i> Thanh toán khi giao hàng (COD)
-                        </label>
-                        <div class="text-muted small ms-4">
-                            - Khách hàng được kiểm tra hàng trước khi nhận hàng.<br>
-                            - Freeship đơn từ 299K
+                <h4 class="section-title mt-4">Hình thức thanh toán</h4>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="p-3 border-bottom">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="payment_cod" name="payment_method" value="COD" class="custom-control-input" checked>
+                                <label class="custom-control-label font-weight-bold" for="payment_cod">
+                                    <i class="fas fa-money-bill-wave text-warning mr-2"></i> Thanh toán khi giao hàng (COD)
+                                </label>
+                                <div class="text-muted small ml-4 mt-1">
+                                    - Khách hàng được kiểm tra hàng trước khi nhận hàng.<br>
+                                    - Freeship đơn từ 299K
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <hr>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="payment" id="vnpay" value="vnpay">
-                        <label class="form-check-label" for="vnpay">
-                            <i class="fas fa-qrcode text-primary me-2"></i> Ví điện tử VNPAY
-                        </label>
-                    </div>
-                    <hr>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment" id="momo" value="momo">
-                        <label class="form-check-label" for="momo">
-                            <i class="fas fa-wallet text-danger me-2"></i> Thanh toán MoMo
-                        </label>
+
+                        <div class="p-3 border-bottom">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="payment_vnpay" name="payment_method" value="VNPAY" class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold" for="payment_vnpay">
+                                    <i class="fas fa-qrcode text-primary mr-2"></i> VNPAY / Banking
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="p-3">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="payment_momo" name="payment_method" value="MOMO" class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold" for="payment_momo">
+                                    <i class="fas fa-wallet text-danger mr-2"></i> Ví MoMo
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-5 mt-4 mt-md-0">
-                <div class="bg-white p-4 rounded shadow-sm">
+            <div class="col-md-5">
+                <div class="bg-white rounded shadow-sm p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Giỏ hàng</h5>
-                        <span class="badge bg-secondary"><?= !empty($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?> Sản phẩm</span>
+                        <h4 class="mb-0 font-weight-bold" style="font-size: 18px;">
+                            <i class="fas fa-shopping-cart mr-2"></i>Giỏ hàng
+                        </h4>
+                        <span class="badge badge-secondary badge-pill"><?= !empty($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?> sản phẩm</span>
                     </div>
-                    <hr>
+                    <hr class="mt-0">
 
                     <?php if (empty($_SESSION['cart'])): ?>
                         
                         <div class="text-center py-4">
-                            <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" class="empty-cart-icon" alt="Empty Cart">
-                            <p class="fw-bold mb-1">Hiện giỏ hàng của bạn không có sản phẩm nào!</p>
+                            <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" class="empty-cart-icon" alt="Empty Cart" style="width: 100px;">
+                            <p class="fw-bold mb-1 font-weight-bold">Hiện giỏ hàng của bạn không có sản phẩm nào!</p>
                             <p class="text-muted small">Về trang cửa hàng để chọn mua sản phẩm bạn nhé!!</p>
                             <a href="category.php" class="btn btn-outline-dark mt-3">Mua sắm ngay</a>
                         </div>
@@ -148,7 +210,7 @@ require_once('layouts/header.php');
                         <div class="mt-3">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Tạm tính:</span>
-                                <span><?= number_format(0, 0, ',', '.') ?>₫</span>
+                                <span>0₫</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Phí vận chuyển:</span>
@@ -156,71 +218,99 @@ require_once('layouts/header.php');
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="fw-bold fs-5">Tổng:</span>
-                                <span class="fw-bold fs-4 text-danger"><?= number_format(0, 0, ',', '.') ?>₫</span>
+                                <span class="fw-bold fs-5 font-weight-bold">Tổng:</span>
+                                <span class="fw-bold fs-4 text-danger font-weight-bold" style="font-size: 20px;">0₫</span>
                             </div>
-                            
-                            <button type="submit" class="btn btn-checkout w-100 py-3 text-uppercase">Thanh Toán</button>
+                            <button type="submit" class="btn btn-checkout w-100 py-3 text-uppercase" disabled>Thanh Toán</button>
                         </div>
 
                     <?php else: ?>
 
                         <div class="cart-scroll-container">
                             <?php 
-                            $total_price = 0;
-                            foreach ($_SESSION['cart'] as $id => $item): 
-                                $subtotal = $item['price'] * $item['num'];
-                                $total_price += $subtotal;
+                            // Ở đây chỉ cần lặp để hiển thị, vì tổng tiền đã tính ở đầu file
+                            foreach ($_SESSION['cart'] as $index => $item): 
                             ?>
-                            <div class="row cart-item align-items-center">
-                                <div class="col-3">
-                                    <img src="<?= $item['thumbnail'] ?>" class="item-img" alt="<?= $item['title'] ?>">
-                                </div>
-                                <div class="col-9">
-                                    <div class="d-flex justify-content-between">
-                                        <h6 class="mb-0 fw-bold"><?= $item['title'] ?></h6>
-                                        <a href="remove_cart.php?id=<?= $id ?>" class="text-danger"><i class="fas fa-times"></i></a>
+                            <div class="cart-item">
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        <img src="<?= fixUrl($item['thumbnail'], '') ?>" class="item-img" alt="<?= $item['title'] ?>">
                                     </div>
-                                    <div class="text-muted small my-1">
-                                        <p>Size: <?= isset($item['size']) ? $item['size'] : 'FreeSize' ?></p> 
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <div class="input-group input-group-sm" style="width: 100px;">
-                                            <button class="btn btn-outline-secondary" type="button">-</button>
-                                            <input type="text" class="form-control text-center" value="<?= $item['num'] ?>">
-                                            <button class="btn btn-outline-secondary" type="button">+</button>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="font-weight-bold mb-1" style="font-size: 14px;">
+                                                <a href="detail.php?id=<?=$item['id']?>" class="text-dark text-decoration-none"><?= $item['title'] ?></a>
+                                            </h6>
+                                            <a href="api/cart_actions.php?action=delete&index=<?=$index?>" class="text-danger ml-2"><i class="fas fa-times"></i></a>
                                         </div>
-                                        <div class="fw-bold"><?= number_format($item['price'], 0, ',', '.') ?>₫</div>
+                                        <div class="text-muted small mb-2">
+                                            <?php if(isset($item['size']) && $item['size'] != ''): ?>
+                                                Size: <span class="badge badge-light border text-dark"><?= $item['size'] ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, -1)">-</button>
+                                                <input type="text" class="qty-input" value="<?= $item['num'] ?>" readonly>
+                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, 1)">+</button>
+                                            </div>
+                                            <div class="font-weight-bold text-right">
+                                                <div style="font-size: 15px;"><?= number_format($item['discount'], 0, ',', '.') ?>₫</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <?php endforeach; ?>
                         </div>
 
-                        <div class="mt-3">
+                        <div class="cart-summary">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Tạm tính:</span>
-                                <span><?= number_format($total_price, 0, ',', '.') ?>₫</span>
+                                <span><?= number_format($total_money, 0, ',', '.') ?>₫</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Phí vận chuyển:</span>
-                                <span class="text-success">Miễn phí</span>
+                                <?php if($shipping_fee == 0): ?>
+                                    <span class="text-success font-weight-bold">Miễn phí</span>
+                                <?php else: ?>
+                                    <span><?= number_format($shipping_fee, 0, ',', '.') ?>₫</span>
+                                <?php endif; ?>
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="fw-bold fs-5">Tổng:</span>
-                                <span class="fw-bold fs-4 text-danger"><?= number_format($total_price, 0, ',', '.') ?>₫</span>
+                                <span class="font-weight-bold" style="font-size: 18px;">Tổng:</span>
+                                <span class="font-weight-bold text-danger" style="font-size: 20px;"><?= number_format($final_total, 0, ',', '.') ?>₫</span>
                             </div>
                             
                             <button type="submit" class="btn btn-checkout w-100 py-3 text-uppercase">Thanh Toán</button>
                         </div>
 
                     <?php endif; ?>
-                    </div>
+                </div>
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    function updateQuantity(index, delta) {
+        window.location.href = 'api/cart_actions.php?action=update&index=' + index + '&delta=' + delta;
+    }
+
+    // Script xử lý sự kiện khi người dùng bấm nút Back trình duyệt
+    window.addEventListener("pageshow", function(event) {
+        // Kiểm tra xem trang có được load từ cache (bfcache) hay không
+        var historyTraversal = event.persisted || 
+                               (typeof window.performance != "undefined" && 
+                                window.performance.navigation.type === 2);
+        
+        if (historyTraversal) {
+            // Nếu là back từ trang khác về, ép reload lại trang để cập nhật giỏ hàng mới nhất
+            window.location.reload();
+        }
+    });
+</script>
 
 <?php
 require_once('layouts/footer.php');
