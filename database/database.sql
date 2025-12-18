@@ -99,3 +99,8 @@ ALTER TABLE `Tokens` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`);
 ALTER TABLE Category ADD banner VARCHAR(500) NULL;
 
 ALTER TABLE `Product` ADD `sizes` VARCHAR(255) NULL AFTER `description`;
+
+ALTER TABLE FeedBack ADD COLUMN fullname VARCHAR(100) AFTER id;
+
+ALTER TABLE FeedBack DROP COLUMN firstname;
+ALTER TABLE FeedBack DROP COLUMN lastname;

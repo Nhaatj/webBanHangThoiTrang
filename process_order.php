@@ -134,7 +134,7 @@ if (!empty($_POST)) {
         $orderIdMoMo = $orderId . "_" . time(); // ID duy nhất: ID-đơn_Thời-gian
         $requestId = time() . "";
         $amount = (string)$final_total; // MoMo cần chuỗi
-        $orderInfo = "Thanh toan don hang " . $orderId;
+        $orderInfo = "#".$orderId;
         $extraData = ""; 
 
         $rawHash = "accessKey=" . $momo_accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $momo_notifyUrl . "&orderId=" . $orderIdMoMo . "&orderInfo=" . $orderInfo . "&partnerCode=" . $momo_partnerCode . "&redirectUrl=" . $momo_returnUrl . "&requestId=" . $requestId . "&requestType=payWithATM";

@@ -8,7 +8,7 @@ $email = $isLoggedIn ? $user['email'] : '';
 $phone_number = $isLoggedIn ? $user['phone_number'] : '';
 $address = $isLoggedIn ? $user['address'] : '';
 
-// --- PHẦN MỚI: TÍNH TOÁN TỔNG TIỀN VÀ PHÍ SHIP NGAY ĐẦU FILE ---
+// --- TÍNH TOÁN TỔNG TIỀN VÀ PHÍ SHIP NGAY ĐẦU FILE ---
 $total_money = 0;
 if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $item) {
@@ -105,7 +105,7 @@ $final_total = $total_money + $shipping_fee;
     }
 </style>
 
-<div class="container" style="margin-top: 20px; margin-bottom: 50px;">
+<div class="container" style="margin-bottom: 50px;">
     <ul class="breadcrumb" style="background: transparent; padding-left: 0;">
         <li class="breadcrumb-item"><a href="index.php" style="color: #333; text-decoration: none;">Trang Chủ</a></li>
         <li class="breadcrumb-item active">Giỏ hàng & Thanh toán</li>

@@ -25,8 +25,7 @@ $data = executeResult($sql);
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Tên</th>
-                    <th>Họ</th>
+                    <th>Họ & Tên</th>
                     <th>SĐT</th>
                     <th>Email</th>
                     <th>Chủ Đề</th>
@@ -46,8 +45,7 @@ $data = executeResult($sql);
 
                     echo '<tr id="tr_' . $item['id'] . '" ' . $rowStyle . '>
                             <td>' . (++$index) . '</td>
-                            <td>' . $item['firstname'] . '</td>
-                            <td>' . $item['lastname'] . '</td>
+                            <td>' . $item['fullname'] . '</td>
                             <td>' . $item['phone_number'] . '</td>
                             <td>' . $item['email'] . '</td>
                             <td>' . $item['subject_name'] . '</td>

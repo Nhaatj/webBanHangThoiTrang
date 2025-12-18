@@ -37,6 +37,7 @@ if (isset($_GET['vnp_SecureHash'])) {
             execute("UPDATE Orders SET status = 1 WHERE id = $orderId");
             $msg = "Thanh toán VNPAY thành công!";
         } else {
+            execute("UPDATE Orders SET status = 2 WHERE id = $orderId");
             $msg = "Giao dịch VNPAY thất bại hoặc bị hủy.";
         }
     } else {
@@ -56,6 +57,7 @@ elseif (isset($_GET['partnerCode']) && isset($_GET['resultCode'])) {
         execute("UPDATE Orders SET status = 1 WHERE id = $orderId");
         $msg = "Thanh toán MoMo thành công!";
     } else {
+        execute("UPDATE Orders SET status = 2 WHERE id = $orderId");
         $msg = "Thanh toán MoMo thất bại (Mã lỗi: " . $resultCode . ")";
     }
 }

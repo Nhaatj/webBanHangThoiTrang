@@ -166,7 +166,7 @@ $latestItems = executeResult(sql: $sql);
 
               <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #000; font-weight: bold; border: 1px solid #000; width: 200px" onclick="addCartWithSize(<?= $product['id'] ?>)">THÊM VÀO GIỎ</button>
 
-              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px" onclick="addCartWithSize(<?= $product['id'] ?>)"><a href="cart.php">MUA NGAY</a></button>
+              <button class="btn btn-success" style="height: 100%; font-size: 15px; background-color: #fff; font-weight: bold; border: 1px solid #000; color: #000; width: 180px" onclick="buyNow(<?= $product['id'] ?>)">MUA NGAY</button>
             </div>
         </div>
 
@@ -276,6 +276,29 @@ $latestItems = executeResult(sql: $sql);
 
         // Gọi hàm addCart gốc (được định nghĩa ở layouts/footer.php) để gửi đi
         addCart(productId, num, size);
+    }
+
+    // --- MUA NGAY (Thêm vào giỏ xong chuyển tới trang cart luôn) ---
+    function buyNow(productId) {
+        var num = $('input[name=num]').val();
+        var size = $('#selected_size').val();
+
+        // 1. Validate Size
+        if ($('.size-btn').length > 0 && (size == '' || size == null)) {
+            alert('Vui lòng chọn kích thước sản phẩm!');
+            return;
+        }
+
+        // 2. Gửi AJAX request để thêm vào giỏ
+        $.post('api/ajax_request.php', {
+            'action': 'cart',
+            'id': productId,
+            'num': num,
+            'size': size
+        }, function(data) {
+            // 3. Sau khi server phản hồi thành công thì mới chuyển trang
+            location.href = 'cart.php';
+        });
     }
 
     // Chờ website tải xong để đảm bảo hàm test đã tồn tại
