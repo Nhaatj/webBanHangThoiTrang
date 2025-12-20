@@ -21,49 +21,61 @@ if (!empty($_POST)) {
     $phone_number = getPost('phone_number');
     $address = getPost('address');
     $note = getPost('note');
-    $payment_method = getPost('payment_method'); // COD, VNPAY, MOMO
-    $shipping_fee = getPost('shipping_fee'); // Nhận phí ship từ form
+    $delivery_method = getPost('delivery_method'); // 'shipping' hoặc 'pickup'
+    $payment_method = getPost('payment_method');   // 'COD', 'VNPAY', 'MOMO'
 
-    // Tính lại tổng tiền từ Session cho an toàn (Server-side calculation)
+    // 2. Tính toán lại Phí Ship (Server-side validation)
     $total_money = 0;
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $item) {
             $total_money += $item['discount'] * $item['num'];
         }
     }
-    // Cộng phí ship (Logic backend phải khớp với frontend)
-    $final_total = $total_money + ($total_money >= 299000 ? 0 : 20000);
+    $shipping_fee = 0;
+    if ($delivery_method == 'pickup') {
+        $shipping_fee = 0;
+        $address = "Nhận tại cửa hàng M&N"; // Cập nhật cứng địa chỉ nếu là pickup
+    } else {
+        // Logic tính phí ship giống bên cart.php
+        if ($total_money < 299000) {
+            $shipping_fee = 20000;
+        }
+    }
+
+    // 3. Tính tổng tiền cuối cùng
+    $final_total = $total_money + $shipping_fee;
 
     $order_date = date('Y-m-d H:i:s');
+    $status = 0; // 0: Chờ xử lý/Chờ thanh toán
+    
     $user_id = isset($_SESSION['user']) ? "'".$_SESSION['user']['id']."'" : "NULL"; // NULL nếu khách vãng lai
 
-    // 2. Lưu Đơn Hàng vào DB (Trạng thái Status = 0: Chờ xử lý/Chưa thanh toán)
-    $sql = "INSERT INTO Orders (user_id, fullname, email, phone_number, address, note, order_date, status, total_money) 
-            VALUES ($user_id, '$fullname', '$email', '$phone_number', '$address', '$note', '$order_date', 0, '$final_total')";
+    // 4. Lưu Đơn Hàng vào DB
+    $sql = "INSERT INTO Orders (user_id, fullname, email, phone_number, address, note, order_date, status, total_money, payment_method) 
+            VALUES ($user_id, '$fullname', '$email', '$phone_number', '$address', '$note', '$order_date', $status, '$final_total', '$payment_method')";
     execute($sql);
 
     // Lấy ID đơn hàng vừa tạo để làm mã giao dịch
-    $sql = "SELECT id FROM Orders ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT id FROM Orders WHERE order_date = '$order_date' ORDER BY id DESC LIMIT 1";
     $orderItem = executeResult($sql, true);
     $orderId = $orderItem['id'];
 
-    // 3. Lưu Chi Tiết Đơn Hàng
+    // 5. Lưu Chi Tiết Đơn Hàng
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $item) {
             $product_id = $item['id'];
             $price = $item['discount'];
             $num = $item['num'];
+            $size = isset($item['size']) ? $item['size'] : '';
             $total_item = $price * $num;
-            $sql = "INSERT INTO Order_Details (order_id, product_id, price, num, total_money) 
-                    VALUES ('$orderId', '$product_id', '$price', '$num', '$total_item')";
+            $sql = "INSERT INTO Order_Details (order_id, product_id, price, num, size, total_money) 
+                    VALUES ('$orderId', '$product_id', '$price', '$num', '$size', '$total_item')";
             execute($sql);
         }
     }
 
-    // Xóa giỏ hàng sau khi lưu xong
-    unset($_SESSION['cart']);
-
-    // 4. XỬ LÝ CHUYỂN HƯỚNG THANH TOÁN
+    // 6. XỬ LÝ CHUYỂN HƯỚNG THANH TOÁN
+    unset($_SESSION['cart']); // Xóa giỏ hàng sau khi lưu xong
     
     // --- TRƯỜNG HỢP 1: COD ---
     if ($payment_method == 'COD') {

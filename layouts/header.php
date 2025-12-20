@@ -115,6 +115,10 @@ $user = getUserToken();
                                         <a href="account.php" class="user-dropdown-item">
                                             <i class="fa fa-user"></i> Tài khoản
                                         </a>
+                                        <a href="order_history.php" class="user-dropdown-item">
+                                            <i class="fa fa-user"></i> Lịch sử mua hàng
+                                        </a>
+                                        <div class="dropdown-divider"></div>
                                         <a href="api/user_actions.php?action=logout" class="user-dropdown-item">
                                             <i class="fa fa-sign-out-alt"></i> Đăng xuất
                                         </a>

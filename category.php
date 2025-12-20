@@ -15,13 +15,13 @@ $latestItems = executeResult($sql);
 ?> 
 <div class="container">
     <ul class="breadcrumb" style="text-decoration: none">
-        <li>
+        <li class="breadcrumb-item">
             <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>
         </li>
         <?php if(count($category) > 0) {?>
-            <li> &nbsp;&nbsp;/&nbsp;&nbsp;<?= $category['name'] ?> </li>
+            <li class="breadcrumb-item active"><?= $category['name'] ?></li>
         <?php } else { ?>
-            <li> &nbsp;&nbsp;/&nbsp;&nbsp;Tất Cả Sản Phẩm </li>       
+            <li class="breadcrumb-item active">Tất Cả Sản Phẩm</li>       
         <?php } ?>
     </ul>
     
