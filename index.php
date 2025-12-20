@@ -44,7 +44,16 @@ require_once('layouts/header.php');
         <div class="product-grid-wrapper">
             <?php
                 foreach($latestItems as $item) {
-                    // Xử lý chuỗi JSON sizes an toàn
+                    // 1. Xử lý hiển thị Giá (Format chuẩn số tiền Việt Nam: 100.000)
+                    $formatted_price = number_format($item['discount'], 0, ',', '.');
+                    
+                    // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
+                    $old_price_html = '';
+                    if($item['price'] > $item['discount']) {
+                        $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                    }
+
+                    // 3. Xử lý chuỗi JSON sizes an toàn
                     $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
                     
                     echo '
@@ -67,9 +76,9 @@ require_once('layouts/header.php');
                                 
                                 <p class="product-title">'.$item['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
-                                    <div>
-                                        <span class="product-discount">'.number_format($item['discount']).'<sup><u>đ</u></sup></span>
-                                        <span class="product-price"><del>'.number_format($item['price']).'<sup><u>đ</u></sup></del></span>
+                                   <div>
+                                        <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                        '.$old_price_html.'
                                     </div>
                                     
                                     <button style="border: none; background-color: transparent" 
@@ -113,6 +122,15 @@ require_once('layouts/header.php');
         <div class="product-list-wrapper owl-carousel owl-theme">
             <?php
                 foreach($items as $pItem) {
+                    // 1. Xử lý hiển thị Giá (Format chuẩn số tiền Việt Nam: 100.000)
+                    $formatted_price = number_format($pItem['discount'], 0, ',', '.');
+                    
+                    // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
+                    $old_price_html = '';
+                    if($pItem['price'] > $pItem['discount']) {
+                        $old_price_html = '<span class="product-price"><del>' . number_format($pItem['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                    }
+
                     echo '
                     <div class="product-item-custom">
                         <a href="detail.php?id='.$pItem['id'].'" style="text-decoration: none; color: inherit;">
@@ -129,8 +147,8 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$pItem['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                     <div>
-                                        <span class="product-discount">'.number_format($pItem['discount']).'<sup><u>đ</u></sup></span>
-                                        <span class="product-price"><del>'.number_format($pItem['price']).'<sup><u>đ</u></sup></del></span>
+                                        <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                        '.$old_price_html.'
                                     </div>';
                                     // Xử lý escape dấu nháy kép cho JSON size để tránh lỗi HTML
                                     $sizesAttr = htmlspecialchars($pItem['sizes'], ENT_QUOTES, 'UTF-8');

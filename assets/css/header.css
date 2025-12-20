@@ -203,7 +203,7 @@ header {
   right: 20px;
   border-width: 0 10px 10px 10px;
   border-style: solid;
-  border-color: transparent transparent #232f3e transparent;
+  border-color: transparent transparent #fff transparent;
 }
 
 .user-dropdown-header {
@@ -307,4 +307,143 @@ header {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Màu đen mờ 50% */
   z-index: 999; /* Nhỏ hơn z-index của Header (1000) */
+}
+
+/* SEARCH CSS */
+
+/* Container bao quanh ô input để định vị dropdown */
+.search-container {
+  position: relative;
+}
+
+/* Khung chứa danh sách gợi ý */
+.search-suggestions {
+  display: none; /* Mặc định ẩn */
+  position: absolute;
+  top: 100%; /* Nằm ngay dưới ô input */
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1001; /* Nằm đè lên các thành phần khác */
+  overflow: visible;
+  border: 1px solid #ddd;
+  border-top: none;
+
+  margin-top: 12px;
+  border-top: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.search-scroll-container {
+  max-height: 400px; /* Giới hạn chiều cao ở đây */
+  overflow-y: auto; /* Thanh cuộn sẽ nằm ở đây */
+}
+
+.search-suggestions::before {
+  content: "";
+  position: absolute;
+  /* Đẩy mũi tên lên trên khung 10px */
+  top: -10px;
+  left: 30px;
+
+  /* Tạo hình tam giác */
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+
+  /* Đổ bóng nhẹ cho mũi tên để khớp với khung */
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
+  z-index: 1002;
+}
+
+/* Tiêu đề "Sản phẩm gợi ý" */
+.search-heading {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #666;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+/* Dòng thông báo không tìm thấy */
+.search-no-result {
+  padding: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Từng dòng sản phẩm (thẻ a) */
+.search-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #f1f1f1;
+  text-decoration: none !important; /* Bỏ gạch chân */
+  transition: background 0.2s;
+  color: #333;
+}
+
+.search-item:hover {
+  background-color: #f4f4f4;
+  color: #000;
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+/* Ảnh thumbnail nhỏ */
+.search-item-img {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.search-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+/* Thông tin tên và giá */
+.search-item-info {
+  flex-grow: 1;
+}
+
+.search-item-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  /* Cắt bớt nếu tên quá dài (2 dòng) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-item-price .new-price {
+  color: #d70018; /* Màu đỏ giống Thế Giới Di Động */
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.search-item-price .old-price del {
+  color: #999;
+  font-size: 12px;
+}
+
+.search-item-size {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 3px;
+  white-space: nowrap; /* Không xuống dòng */
+  overflow: hidden; /* Ẩn phần thừa */
+  text-overflow: ellipsis; /* Hiện dấu ... nếu quá dài */
 }

@@ -57,10 +57,12 @@ $user = getUserToken();
                     </div>
                     
                     <div class="col-md-6 col-5">
-                        <form action="index.php" method="get">
+                        <form action="search.php" method="get" class="header-search-form">
                             <div class="search-container">
-                                <input type="text" name="search" placeholder="Bạn đang tìm gì...">
+                                <input type="text" id="search_input" name="search" placeholder="Bạn đang tìm gì..." autocomplete="off" value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
                                 <button type="submit"><i class="fa fa-search"></i></button>
+
+                                <div id="search_suggestions" class="search-suggestions"></div>
                             </div>
                         </form>
                     </div>
@@ -237,6 +239,40 @@ $user = getUserToken();
                         $('#login_msg').text(data);
                     }
                 })
+            });
+        });
+
+        // SEARCH LOGIC
+        $(document).ready(function() {
+
+            // Bắt sự kiện khi người dùng gõ vào ô tìm kiếm
+            $('#search_input').keyup(function() {
+                var keyword = $(this).val();
+
+                if (keyword.length > 1) { // Chỉ tìm khi gõ hơn 1 ký tự
+                    $.post('api/ajax_search.php', {
+                        'keyword': keyword
+                    }, function(data) {
+                        $('#search_suggestions').html(data);
+                        $('#search_suggestions').fadeIn(); // Hiện khung gợi ý
+                    });
+                } else {
+                    $('#search_suggestions').fadeOut(); // Ẩn nếu xóa hết chữ
+                }
+            });
+
+            // Ẩn khung gợi ý khi click ra ngoài
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    $('#search_suggestions').fadeOut();
+                }
+            });
+        
+            // Khi click lại vào ô input thì hiện lại gợi ý (nếu có dữ liệu cũ)
+            $('#search_input').click(function() {
+                if ($(this).val().length > 1 && $('#search_suggestions').html().trim() != "") {
+                    $('#search_suggestions').fadeIn();
+                }
             });
         });
     </script>

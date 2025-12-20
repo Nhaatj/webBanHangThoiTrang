@@ -3,6 +3,10 @@ body {
   padding-top: 130px; /* Chiều cao ước lượng của header */
   background-color: #f4f4f4;
   box-sizing: border-box;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Class mới: Dùng cho danh sách dạng lưới (Grid) tự xuống dòng */
@@ -200,38 +204,38 @@ body {
 }
 
 .nav li {
-    text-transform: uppercase;
-    /* margin-top: 10px; */
+  text-transform: uppercase;
+  /* margin-top: 10px; */
 }
 .nav li a {
-    color: black;
-    font-weight: 500;
+  color: black;
+  font-weight: 500;
 }
 .nav {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .carousel-inner img {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 .product-item:hover {
-    background-color: #f5f6f7;
-    cursor: pointer;
+  background-color: #f5f6f7;
+  cursor: pointer;
 }
 .product-item {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .breadcrumb {
-    padding: 0 5px;
-    padding-left: 0;
-    background-color: transparent;
-    margin-bottom: 10px;
+  padding: 0 5px;
+  padding-left: 0;
+  background-color: transparent;
+  margin-bottom: 10px;
 }
 
 sup {
-    font-size: 65%;
+  font-size: 65%;
 }
 
 /* Responsive cho mobile: Hiển thị 2 sản phẩm 1 hàng để dễ nhìn */
