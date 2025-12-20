@@ -214,10 +214,16 @@ header {
   color: #000; /* Màu tên nổi bật */
 }
 
+.dropdown-divider{
+  border-bottom: 1px solid #3a4b5c;
+  margin: 0;
+}
+
 .user-dropdown-item {
   display: block;
   padding: 10px 15px;
   color: #000;
+  font-size: 16px;
   text-decoration: none;
   transition: 0.2s;
   display: flex;

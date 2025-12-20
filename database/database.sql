@@ -104,3 +104,10 @@ ALTER TABLE FeedBack ADD COLUMN fullname VARCHAR(100) AFTER id;
 
 ALTER TABLE FeedBack DROP COLUMN firstname;
 ALTER TABLE FeedBack DROP COLUMN lastname;
+
+ALTER TABLE Order_Details ADD size VARCHAR(50) NULL;
+
+-- lưu ngày khách nhận hàng thành công
+ALTER TABLE Orders ADD received_date DATETIME NULL;
+
+ALTER TABLE Orders ADD COLUMN payment_method VARCHAR(50) DEFAULT 'COD';

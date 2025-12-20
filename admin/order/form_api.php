@@ -29,6 +29,13 @@ function updateStatus()
   $id = getPost('id');
   $status = getPost('status');
 
-  $sql = "update Orders set status = $status where id = $id";
+  $received_date_sql = "";
+  // Nếu chuyển sang status 2 (Hoàn thành, đã nhận hàng) -> Cập nhật thời gian nhận
+  if ($status == 2) {
+      $now = date('Y-m-d H:i:s');
+      $received_date_sql = ", received_date = '$now'";
+  }
+
+  $sql = "update Orders set status = $status $received_date_sql where id = $id";
   execute($sql);
 }

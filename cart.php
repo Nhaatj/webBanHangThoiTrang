@@ -112,7 +112,7 @@ $final_total = $total_money + $shipping_fee;
     </ul>
 
     <form action="process_order.php" method="POST">
-        <input type="hidden" name="shipping_fee" value="<?= $shipping_fee ?>">
+        <input type="hidden" id="shipping_fee" name="shipping_fee" value="<?= $shipping_fee ?>">
         
         <div class="row">
             <div class="col-md-7 mb-4">
@@ -128,29 +128,25 @@ $final_total = $total_money + $shipping_fee;
                         <input type="email" class="form-control" name="email" placeholder="Email (nếu có)" value="<?=$email?>">
                     </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="address" placeholder="Địa chỉ giao hàng" value="<?=$address?>" required>
+                <div class="form-group mb-3">
+                    <label style="font-weight: 600;">Hình thức nhận hàng:</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="method_pickup" name="delivery_method" value="pickup" class="custom-control-input" onchange="toggleAddress(this)">
+                        <label class="custom-control-label" for="method_pickup">Nhận tại cửa hàng</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="method_delivery" name="delivery_method" value="delivery" class="custom-control-input" checked onchange="toggleAddress(this)">
+                        <label class="custom-control-label" for="method_delivery">Giao tận nơi</label>
+                    </div>
+                    <div class="form-group" id="address_group">
+                        <input type="text" class="form-control" name="address" id="address_input" placeholder="Địa chỉ giao hàng" value="<?=$address?>" required>
+                    </div>
                 </div>
+                
                 <div class="form-group">
                     <textarea class="form-control" name="note" rows="2" placeholder="Ghi chú..."></textarea>
                 </div>
-
-                <h4 class="section-title mt-4">Phương thức vận chuyển</h4>
-                <div class="card p-3 mb-3">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="shipping1" name="shipping_method" class="custom-control-input" checked>
-                        <label class="custom-control-label d-flex justify-content-between align-items-center" for="shipping1" style="width: 100%;">
-                            <?php if($shipping_fee == 0): ?>
-                                <span>Freeship đơn hàng</span>
-                                <span class="font-weight-bold text-success">Miễn phí</span>
-                            <?php else: ?>
-                                <span>Phí ship đơn hàng</span>
-                                <span class="font-weight-bold"><?= number_format($shipping_fee, 0, ',', '.') ?>₫</span>
-                            <?php endif; ?>
-                        </label>
-                    </div>
-                </div>
-
+            
                 <h4 class="section-title mt-4">Hình thức thanh toán</h4>
                 <div class="card">
                     <div class="card-body p-0">
@@ -310,6 +306,48 @@ $final_total = $total_money + $shipping_fee;
             window.location.reload();
         }
     });
+
+    function toggleAddress(radio) {
+        var addressGroup = document.getElementById('address_group');
+        var addressInput = document.getElementById('address_input');
+        
+        // Cập nhật hiển thị phí ship bên cột phải
+        var shippingFeeSpan = document.querySelector('.cart-summary .mb-2:nth-child(2) span:last-child');
+        var totalMoneySpan = document.querySelector('.cart-summary .mb-3 span.text-danger');
+        
+        // Lấy tổng tiền hàng (Tạm tính) từ PHP render ra hoặc DOM
+        // Cách đơn giản: Lấy text tạm tính và parse ra số
+        var subTotalText = document.querySelector('.cart-summary .mb-2:nth-child(1) span:last-child').innerText;
+        var subTotal = parseInt(subTotalText.replace(/\./g, '').replace('₫', ''));
+        
+        var originalShippingFee = <?= $shipping_fee ?>; // Phí ship tính từ PHP (dựa trên 299k)
+
+        if (radio.value == 'pickup') {
+            // Ẩn địa chỉ
+            addressGroup.style.display = 'none';
+            addressInput.removeAttribute('required'); // Bỏ bắt buộc nhập
+            addressInput.value = "Cửa hàng M&N"; // Tự điền giá trị
+
+            // Cập nhật UI: Phí ship = 0
+            if(shippingFeeSpan) shippingFeeSpan.innerHTML = '<span class="text-success font-weight-bold">Miễn phí</span>';
+            if(totalMoneySpan) totalMoneySpan.innerText = new Intl.NumberFormat('vi-VN').format(subTotal) + '₫';
+            
+        } else {
+            // Hiện địa chỉ
+            addressGroup.style.display = 'block';
+            addressInput.setAttribute('required', 'true');
+            addressInput.value = "<?=$address?>"; // Trả lại địa chỉ cũ nếu có
+
+            // Cập nhật UI: Trả lại phí ship gốc
+            if(originalShippingFee == 0) {
+                if(shippingFeeSpan) shippingFeeSpan.innerHTML = '<span class="text-success font-weight-bold">Miễn phí</span>';
+                if(totalMoneySpan) totalMoneySpan.innerText = new Intl.NumberFormat('vi-VN').format(subTotal) + '₫';
+            } else {
+                if(shippingFeeSpan) shippingFeeSpan.innerText = new Intl.NumberFormat('vi-VN').format(originalShippingFee) + '₫';
+                if(totalMoneySpan) totalMoneySpan.innerText = new Intl.NumberFormat('vi-VN').format(subTotal + originalShippingFee) + '₫';
+            }
+        }
+    }
 </script>
 
 <?php

@@ -5,10 +5,6 @@ require_once('../layouts/header.php');
 
 $orderId = getGet('id');
 
-// Lấy danh sách phản hồi chưa bị xóa (status != 3)
-// status = 0: Chưa đọc (màu trắng)
-// status = 1: Đã đọc (màu xám)
-// status = 2: Đã xóa (ẩn)
 $sql = "select Order_Details.*, Product.title, Product.thumbnail from Order_Details left join Product on Product.id = Order_Details.product_id where Order_Details.order_id = $orderId";
 $data = executeResult($sql);
 
@@ -39,7 +35,7 @@ $orderItem = executeResult($sql, true);
                 foreach ($data as $item) {
                     echo '<tr>
                             <td>' . (++$index) . '</td>
-                            <td><img src="'.fixUrl($item['thumbnail']).'" style="height: 120px"/></td>
+                            <td><img src="'.fixUrl($item['thumbnail'], '../../').'" style="height: 120px"/></td>
                             <td>' . $item['title'] . '</td>
                             <td>' . $item['price'] . '</td>
                             <td>' . $item['num'] . '</td>

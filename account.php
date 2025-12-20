@@ -20,10 +20,10 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'success') {
 
 <div class="container" style="margin-bottom: 50px;">
     <ul class="breadcrumb" style="text-decoration: none">
-        <li>
+        <li class="breadcrumb-item">
             <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>
         </li>
-        <li> &nbsp;&nbsp;/&nbsp;&nbsp;Tài Khoản </li>
+        <li class="breadcrumb-item active">Tài Khoản</li>
     </ul>
 
     <div class="row justify-content-center">

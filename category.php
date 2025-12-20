@@ -61,9 +61,11 @@ $productList = executeResult($sql)
 
 ?> 
 <div class="container">
-    <ul class="breadcrumb" style="text-decoration: none; background: transparent; padding-left: 0;">
-        <li class="breadcrumb-item"><a href="index.php" style="color: #333; text-decoration: none;">Trang Chủ</a></li>
-        <?php if(!empty($category)) {?>
+    <ul class="breadcrumb" style="text-decoration: none; padding-left: 0;">
+        <li class="breadcrumb-item">
+            <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>
+        </li>
+        <?php if(count($category) > 0) {?>
             <li class="breadcrumb-item active"><?= $category['name'] ?></li>
         <?php } else { ?>
             <li class="breadcrumb-item active">Tất Cả Sản Phẩm</li>       

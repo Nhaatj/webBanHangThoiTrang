@@ -121,6 +121,7 @@ if ($orderId != "") {
                                 <tr>
                                     <th>Hình</th>
                                     <th>Sản phẩm</th>
+                                    <th>Size</th>
                                     <th>SL</th>
                                     <th>Giá</th>
                                     <th>Thành tiền</th>
@@ -131,6 +132,7 @@ if ($orderId != "") {
                                 <tr>
                                     <td><img src="<?= fixUrl($item['thumbnail'], '') ?>" width="50px"></td>
                                     <td><?= $item['title'] ?></td>
+                                    <td><?= $item['size'] ?></td>
                                     <td class="text-center"><?= $item['num'] ?></td>
                                     <td><?= number_format($item['price'], 0, ',', '.') ?>₫</td>
                                     <td><?= number_format($item['total_money'], 0, ',', '.') ?>₫</td>

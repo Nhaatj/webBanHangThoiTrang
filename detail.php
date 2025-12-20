@@ -92,13 +92,13 @@ $latestItems = executeResult(sql: $sql);
 </style>
 <div class="container">
     <ul class="breadcrumb" style="text-decoration: none">
-      <li>
-        <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>&nbsp;&nbsp;/&nbsp;&nbsp;
+      <li class="breadcrumb-item">
+        <a href="index.php" style="text-decoration: none; color:black">Trang Chủ</a>
       </li>
-      <li>
-        <a href="category.php?id=<?= $product['category_id'] ?>" style="text-decoration: none; color:black"> <?= $product['category_name'] ?></a>&nbsp;&nbsp;/&nbsp;&nbsp;
+      <li class="breadcrumb-item">
+        <a href="category.php?id=<?= $product['category_id'] ?>" style="text-decoration: none; color:black"><?= $product['category_name'] ?></a>
       </li>
-      <li> <?= $product['title'] ?></li>
+      <li class="breadcrumb-item active"><?= $product['title'] ?></li>
     </ul>
 
     <div class="row">

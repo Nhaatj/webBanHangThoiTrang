@@ -1,3 +1,4 @@
+    </main>
     <footer class="footer-dark">
         <div class="container">
             <div class="row">

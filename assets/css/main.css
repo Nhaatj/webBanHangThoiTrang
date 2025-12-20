@@ -9,6 +9,10 @@ body {
   flex-direction: column;
 }
 
+main {
+  margin-bottom: 30px;
+}
+
 /* Class mới: Dùng cho danh sách dạng lưới (Grid) tự xuống dòng */
 .product-grid-wrapper {
   display: flex;
