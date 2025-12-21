@@ -139,7 +139,7 @@ if ($orderId != "") {
                                 </tr>
                                 <?php endforeach; ?>
                                 <tr class="font-weight-bold">
-                                    <td colspan="4" class="text-right">TỔNG CỘNG:</td>
+                                    <td colspan="5" class="text-left">TỔNG CỘNG:</td>
                                     <td class="text-danger"><?= number_format($orderItem['total_money'], 0, ',', '.') ?>₫</td>
                                 </tr>
                             </tbody>

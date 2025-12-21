@@ -225,7 +225,7 @@ $final_total = $total_money + $shipping_fee;
                         <div class="cart-scroll-container">
                             <?php 
                             // Ở đây chỉ cần lặp để hiển thị, vì tổng tiền đã tính ở đầu file
-                            foreach ($_SESSION['cart'] as $index => $item): 
+                            foreach ($_SESSION['cart'] as $index => $item):
                             ?>
                             <div class="cart-item">
                                 <div class="d-flex">
@@ -250,8 +250,11 @@ $final_total = $total_money + $shipping_fee;
                                                 <input type="text" class="qty-input" value="<?= $item['num'] ?>" readonly>
                                                 <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, 1)">+</button>
                                             </div>
+                                            <?php
+                                                $total_price_items = $item['discount'] * $item['num'];
+                                            ?>
                                             <div class="font-weight-bold text-right">
-                                                <div style="font-size: 15px;"><?= number_format($item['discount'], 0, ',', '.') ?>₫</div>
+                                                <div style="font-size: 15px;"><?= number_format($total_price_items, 0, ',', '.') ?>₫</div>
                                             </div>
                                         </div>
                                     </div>

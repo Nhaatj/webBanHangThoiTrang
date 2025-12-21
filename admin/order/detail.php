@@ -46,8 +46,7 @@ $orderItem = executeResult($sql, true);
                 ?>
 
                 <tr>
-                  <td colspan="4"></td>
-                  <th>Tổng Tiền:</th>
+                  <th colspan="5" class="align-left">Tổng Tiền:</th>
                   <th><?=$orderItem['total_money']?></th>
                 </tr>
             </tbody>
