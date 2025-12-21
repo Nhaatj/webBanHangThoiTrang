@@ -26,6 +26,10 @@ function doLogin() {
         // Lưu session
         $_SESSION['user'] = $user;
         
+        // Đồng bộ giỏ hàng từ Session vào DB và ngược lại
+        syncCartLogin($user['id']);
+        // ---------------------
+
         // Lưu token để tự động đăng nhập lần sau (nếu cần)
         $token = getSecurityMD5($user['email'] . time());
         setcookie('token', $token, time() + 7 * 24 * 60 * 60, '/');

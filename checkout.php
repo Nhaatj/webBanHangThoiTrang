@@ -1,4 +1,6 @@
 <?php
+require_once('utils/utility.php');
+require_once('database/dbhelper.php');
 require_once('layouts/header.php');
 require_once('config_vnpay.php');
 
@@ -74,6 +76,7 @@ elseif (isset($_GET['order_id'])) {
 // 4. LẤY THÔNG TIN ĐƠN HÀNG ĐỂ HIỂN THỊ
 // ------------------------------------------
 $orderItem = null;
+$total_detail = 0;
 if ($orderId != "") {
     $sql = "SELECT * FROM Orders WHERE id = $orderId";
     $orderItem = executeResult($sql, true);
@@ -84,6 +87,11 @@ if ($orderId != "") {
                    LEFT JOIN Product ON Order_Details.product_id = Product.id 
                    WHERE Order_Details.order_id = $orderId";
     $orderDetails = executeResult($sqlDetails);
+
+    foreach ($orderDetails as $item) {
+        // Tổng tiền sản phẩm trong order details (Không bao gồm phí ship)
+        $total_detail += $item['total_money'];
+    }
 }
 ?>
 
@@ -122,7 +130,7 @@ if ($orderId != "") {
                                     <th>Hình</th>
                                     <th>Sản phẩm</th>
                                     <th>Size</th>
-                                    <th>SL</th>
+                                    <th>Số lượng</th>
                                     <th>Giá</th>
                                     <th>Thành tiền</th>
                                 </tr>
@@ -133,14 +141,18 @@ if ($orderId != "") {
                                     <td><img src="<?= fixUrl($item['thumbnail'], '') ?>" width="50px"></td>
                                     <td><?= $item['title'] ?></td>
                                     <td><?= $item['size'] ?></td>
-                                    <td class="text-center"><?= $item['num'] ?></td>
-                                    <td><?= number_format($item['price'], 0, ',', '.') ?>₫</td>
-                                    <td><?= number_format($item['total_money'], 0, ',', '.') ?>₫</td>
+                                    <td class="text-right"><?= $item['num'] ?></td>
+                                    <td class="text-right"><?= number_format($item['price'], 0, ',', '.') ?>₫</td>
+                                    <td class="text-right"><?= number_format($item['total_money'], 0, ',', '.') ?>₫</td>
                                 </tr>
                                 <?php endforeach; ?>
                                 <tr class="font-weight-bold">
-                                    <td colspan="5" class="text-left">TỔNG CỘNG:</td>
-                                    <td class="text-danger"><?= number_format($orderItem['total_money'], 0, ',', '.') ?>₫</td>
+                                    <?php if ($orderItem['address'] == "Nhận tại cửa hàng M&N" || $total_detail >= 299000) {
+                                        echo '<td colspan="5" class="text-left">TỔNG CỘNG:</td>';
+                                    } else {
+                                        echo '<td colspan="5" class="text-left">TỔNG CỘNG (Bao gồm phí vận chuyển):</td>';
+                                    }?>
+                                    <td class="text-danger text-right"><?= number_format($orderItem['total_money'], 0, ',', '.') ?>₫</td>
                                 </tr>
                             </tbody>
                         </table>

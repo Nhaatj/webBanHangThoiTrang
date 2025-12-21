@@ -1,6 +1,12 @@
 <?php
 require_once('layouts/header.php');
 
+// Nếu user đã đăng nhập, luôn tải lại giỏ hàng mới nhất từ Database 
+// -> đảm bảo đồng bộ với các thiết bị khác.
+if ($user != null) {
+    loadCartFromDB($user['id']);
+}
+
 // Kiểm tra đăng nhập
 $isLoggedIn = isset($user) && $user != null;
 $fullname = $isLoggedIn ? $user['fullname'] : '';

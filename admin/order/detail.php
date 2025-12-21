@@ -8,6 +8,12 @@ $orderId = getGet('id');
 $sql = "select Order_Details.*, Product.title, Product.thumbnail from Order_Details left join Product on Product.id = Order_Details.product_id where Order_Details.order_id = $orderId";
 $data = executeResult($sql);
 
+$total_detail = 0;
+foreach ($data as $item) {
+    // Tổng tiền sản phẩm trong order details (Không bao gồm phí ship)
+    $total_detail += $item['total_money'];
+}
+
 $sql = "select * from Orders where id = $orderId";
 $orderItem = executeResult($sql, true);
 ?>
@@ -37,17 +43,21 @@ $orderItem = executeResult($sql, true);
                             <td>' . (++$index) . '</td>
                             <td><img src="'.fixUrl($item['thumbnail'], '../../').'" style="height: 120px"/></td>
                             <td>' . $item['title'] . '</td>
-                            <td>' . $item['price'] . '</td>
-                            <td>' . $item['num'] . '</td>
-                            <td>' . $item['total_money'] . '</td>
+                            <td class="text-right">' . $item['price'] . '₫</td>
+                            <td class="text-right">' . $item['num'] . '</td>
+                            <td class="text-right">' . $item['total_money'] . '₫</td>
                         </tr>';
 
                 }
                 ?>
 
                 <tr>
-                  <th colspan="5" class="align-left">Tổng Tiền:</th>
-                  <th><?=$orderItem['total_money']?></th>
+                  <?php if ($orderItem['address'] == "Nhận tại cửa hàng M&N" || $total_detail >= 299000) {
+                      echo '<td style="font-weight: bold" colspan="5" class="text-left">TỔNG CỘNG:</td>';
+                  } else {
+                      echo '<td style="font-weight: bold" colspan="5" class="text-left">TỔNG CỘNG (Bao gồm phí vận chuyển):</td>';
+                  }?>
+                  <th class="text-right"><?=$orderItem['total_money']?>₫</th>
                 </tr>
             </tbody>
         </table>

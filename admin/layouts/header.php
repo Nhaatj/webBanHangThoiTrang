@@ -43,23 +43,30 @@ if($user['role_id'] != 1) {
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    
+    <style>
+        .border-top{
+            border-bottom: 1px solid rgba(58, 75, 92, 0.2);
+            margin: 0;
+        }
+
+        .logout {
+            padding: 0 1rem;
+        }
+    </style>
 
 </head>
 <body>
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="<?=$baseUrl?>../index.php">M&N</a>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Tìm kiếm" aria-label="Search">
-    <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-            <a class="nav-link" href="<?=$baseUrl?>authen/logout.php">Thoát</a>
-        </li>
-    </ul>
+    <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Tìm kiếm" aria-label="Search"> -->
+    
 </nav>
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
+            <div class="sidebar-sticky d-flex flex-column" style="height: calc(100vh - 48px);">
+                <ul class="nav flex-column" style="padding-bottom: .75rem; font-size: 1rem">
                     <li class="nav-item">
                         <a class="nav-link active" href="<?=$baseUrl?>">
                             <i class="bi bi-house-fill"></i>
@@ -94,6 +101,15 @@ if($user['role_id'] != 1) {
                         <a class="nav-link" href="<?=$baseUrl?>user">
                             <i class="bi bi-people-fill"></i>
                             Người Dùng
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav mt-auto" style="padding-top: .75rem; font-size: 1rem;"> 
+                    <div class="border-top"></div>
+                    <li class="nav-item logout">
+                        <a class="nav-link" href="<?=$baseUrl?>authen/logout.php" style="color: #000;">
+                            <i class="bi bi-box-arrow-right"></i> Đăng xuất
                         </a>
                     </li>
                 </ul>
