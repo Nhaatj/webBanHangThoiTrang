@@ -21,6 +21,10 @@ if (!empty($_POST)) {
 
         $_SESSION['user'] = $userExist;
 
+        // Đồng bộ giỏ hàng
+        syncCartLogin($userId);
+        // -----------------------------
+
         $sql = "insert into Tokens (user_id, token, created_at) values ('$userId','$token', '$created_at')";
         execute($sql);
 

@@ -75,7 +75,14 @@ if (!empty($_POST)) {
     }
 
     // 6. XỬ LÝ CHUYỂN HƯỚNG THANH TOÁN
-    unset($_SESSION['cart']); // Xóa giỏ hàng sau khi lưu xong
+    // Xóa giỏ hàng sau khi lưu xong ---------------------------------------------------
+    unset($_SESSION['cart']); // Xóa giỏ hàng Session
+    
+    // Xóa giỏ hàng trong Database nếu đã đăng nhập
+    if (isset($_SESSION['user'])) {
+        clearCartDB($_SESSION['user']['id']); // Hàm này đã viết ở bước 2
+    }
+    // --------------------------------------------------------------------------------
     
     // --- TRƯỜNG HỢP 1: COD ---
     if ($payment_method == 'COD') {

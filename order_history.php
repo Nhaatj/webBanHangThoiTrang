@@ -117,8 +117,8 @@ function getStatusText($status) {
         <?php } ?>
     <?php } else { ?>
         <div class="text-center py-5">
-            <img src="https://www.thegioididong.com/lich-su-mua-hang/images/empty-history.png" style="width: 100px; margin-bottom: 10px;">
-            <p>Bạn chưa có đơn hàng nào.</p>
+            <i class="fa-solid fa-cart-flatbed"></i><br>
+            <p><b>Rất tiếc, không tìm thấy đơn hàng nào phù hợp</b></p>
             <a href="index.php" class="btn btn-primary">Mua sắm ngay</a>
         </div>
     <?php } ?>

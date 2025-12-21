@@ -42,7 +42,7 @@ $data = executeResult($sql);
                             <td>' . $item['email'] . '</td>
                             <td>' . $item['address'] . '</td>
                             <td>' . $item['note'] . '</td>
-                            <td>' . $item['total_money'] . '</td>
+                            <td>' . $item['total_money'] . '₫</td>
                             <td>' . $item['order_date'] . '</td>
                             <td>';
                                 if ($item['status'] == 0) {

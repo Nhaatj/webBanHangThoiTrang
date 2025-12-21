@@ -49,8 +49,8 @@ $data = executeResult($sql);
                             <td>' . $item['title'] . '</td>
                             <td>' . $item['category_name'] . '</td>
                             <td>' . $sizeStr . '</td>
-                            <td>' . number_format($item['price']). ' đ</td>
-                            <td>' . number_format($item['discount']). ' đ</td>
+                            <td>' . number_format($item['price']). '₫</td>
+                            <td>' . number_format($item['discount']). '₫</td>
                             <td style="width: 50px">
                                 <a href="editor.php?id=' . $item['id'] . '"><button class="btn btn-warning">Sửa</button></a>
                             </td>

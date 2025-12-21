@@ -37,9 +37,9 @@ $orderItem = executeResult($sql, true);
                             <td>' . (++$index) . '</td>
                             <td><img src="'.fixUrl($item['thumbnail'], '../../').'" style="height: 120px"/></td>
                             <td>' . $item['title'] . '</td>
-                            <td>' . $item['price'] . '</td>
+                            <td>' . $item['price'] . '₫</td>
                             <td>' . $item['num'] . '</td>
-                            <td>' . $item['total_money'] . '</td>
+                            <td>' . $item['total_money'] . '₫</td>
                         </tr>';
 
                 }
@@ -48,7 +48,7 @@ $orderItem = executeResult($sql, true);
                 <tr>
                   <td colspan="4"></td>
                   <th>Tổng Tiền:</th>
-                  <th><?=$orderItem['total_money']?></th>
+                  <th><?=$orderItem['total_money']?>₫</th>
                 </tr>
             </tbody>
         </table>
