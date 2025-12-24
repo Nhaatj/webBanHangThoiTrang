@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 //$sql = "insert into Role(name) values ('Admin')";
 //$sql = "insert into Role(name) values ('$name')"; => $name = 'Admin => lỗi sql injection => khi join một project thực tế sẽ quy định phải dùng framework có sẵn (vd: Laravel) => fix
 //fix core: $name = 'Admin => \'Admin

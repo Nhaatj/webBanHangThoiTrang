@@ -1,6 +1,7 @@
 <!-- File này giải quyết logic cho login.php -->
 
 <?php
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 $fullname = $email = $msg = '';
 
 if (!empty($_POST)) {

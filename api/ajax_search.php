@@ -6,8 +6,14 @@ require_once('../database/dbhelper.php');
 $keyword = getPost('keyword');
 
 if (!empty($keyword)) {
-    // Tìm sản phẩm có tên chứa từ khóa, giới hạn 5 kết quả
-    $sql = "SELECT * FROM Product WHERE title LIKE '%$keyword%' AND deleted = 0 LIMIT 5";
+    // 1. Tìm sản phẩm (JOIN bảng Product_Size để lấy size)
+    // Sử dụng GROUP_CONCAT để gộp các size lại thành chuỗi "S, M, L" ngay trong câu SQL
+    $sql = "SELECT p.*, GROUP_CONCAT(ps.size_name SEPARATOR ', ') as size_list
+            FROM Product p
+            LEFT JOIN Product_Size ps ON p.id = ps.product_id AND ps.inventory_num > 0
+            WHERE p.title LIKE '%$keyword%' AND p.deleted = 0
+            GROUP BY p.id
+            LIMIT 5";
     $result = executeResult($sql);
 
     if (count($result) > 0) {
@@ -24,17 +30,11 @@ if (!empty($keyword)) {
             // 2. Xử lý hiển thị Ảnh
             $thumbnail = fixUrl($item['thumbnail'], ''); 
 
-            // 3. Xử lý hiển thị Size (Code mới thêm)
+            // 3. Xử lý hiển thị Size
+            // Lấy trực tiếp từ cột size_list đã GROUP_CONCAT ở trên
             $size_html = '';
-            if (isset($item['sizes']) && $item['sizes'] != '') {
-                // Giải mã JSON: ["S", "M"] -> Array
-                $sizesArr = json_decode($item['sizes'], true);
-                
-                // Nếu là mảng hợp lệ thì nối thành chuỗi "S, M"
-                if (is_array($sizesArr) && count($sizesArr) > 0) {
-                    $sizesStr = implode(', ', $sizesArr);
-                    $size_html = '<div class="search-item-size">Size: ' . $sizesStr . '</div>';
-                }
+            if (!empty($item['size_list'])) {
+                $size_html = '<div class="search-item-size">Size: ' . $item['size_list'] . '</div>';
             }
 
             echo '

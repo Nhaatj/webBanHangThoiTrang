@@ -16,9 +16,11 @@ if($category_id != '' && $category_id > 0) {
 }
 
 // 3. Xây dựng câu SQL lấy sản phẩm
-$sql = "SELECT Product.*, Category.name as category_name 
+// Lưu ý: Dùng DISTINCT vì khi lọc size (JOIN bảng Product_Size) có thể gây trùng lặp
+$sql = "SELECT DISTINCT Product.*, Category.name as category_name 
         FROM Product 
         LEFT JOIN Category ON Product.category_id = Category.id 
+        LEFT JOIN Product_Size ON Product.id = Product_Size.product_id
         WHERE Product.deleted = 0";
 
 // --- LOGIC PHÂN CHIA TRƯỜNG HỢP ---
@@ -37,11 +39,12 @@ if ($category_id != '' && $category_id > 0) {
 
 // --- LOGIC LỌC SIZE (Dùng chung cho cả 2 trường hợp) ---
 if (!empty($selected_sizes)) {
-    $size_conditions = [];
-    foreach ($selected_sizes as $size) {
-        $size_conditions[] = "Product.sizes LIKE '%\"$size\"%'";
-    }
-    $sql .= " AND (" . implode(' OR ', $size_conditions) . ")";
+    // Lọc theo bảng Product_Size.size_name
+    // Chuyển mảng size thành chuỗi: 'S','M','L'
+    $size_list = "'" . implode("','", $selected_sizes) . "'";
+    
+    // Điều kiện: Chỉ lấy sản phẩm có size nằm trong danh sách đã chọn VÀ còn hàng tồn kho
+    $sql .= " AND Product_Size.size_name IN ($size_list) AND Product_Size.inventory_num > 0";
 }
 
 // --- LOGIC SẮP XẾP ---
@@ -57,8 +60,16 @@ switch ($sort) {
         break;
 }
 
-$productList = executeResult($sql)
+$productList = executeResult($sql);
 
+// --- LẤY DANH SÁCH TẤT CẢ SIZE CÓ TRONG DB ĐỂ HIỂN THỊ BỘ LỌC ---
+$sqlSize = "SELECT DISTINCT size_name FROM Product_Size WHERE inventory_num > 0 ORDER BY size_name ASC";
+$sizeData = executeResult($sqlSize);
+$listSizes = [];
+foreach ($sizeData as $sItem) {
+    $listSizes[] = $sItem['size_name'];
+}
+// -----------------------------------------------------------------
 ?> 
 <div class="container">
     <ul class="breadcrumb" style="text-decoration: none; padding-left: 0;">
@@ -126,14 +137,22 @@ $productList = executeResult($sql)
                                 <h6 class="dropdown-header font-weight-bold text-dark px-0">KÍCH CỠ:</h6>
                                 <div class="d-flex flex-wrap ml-2">
                                     <?php
-                                    $listSizes = ['S', 'M', 'L', 'XL', 'XXL'];
-                                    foreach ($listSizes as $size) {
-                                        $sizeChecked = in_array($size, $selected_sizes) ? 'checked' : '';
-                                        echo '
-                                        <div class="custom-control custom-checkbox mr-3 mb-2">
-                                            <input type="checkbox" class="custom-control-input" id="s_'.$size.'" name="sizes[]" value="'.$size.'" '.$sizeChecked.'>
-                                            <label class="custom-control-label" for="s_'.$size.'">'.$size.'</label>
-                                        </div>';
+                                    // Hiển thị danh sách size động từ DB
+                                    if(count($listSizes) > 0) {
+                                        foreach ($listSizes as $size) {
+                                            $sizeChecked = in_array($size, $selected_sizes) ? 'checked' : '';
+                                            echo '
+                                            <div class="custom-control custom-checkbox mr-3 mb-2">
+                                                <input type="checkbox" class="custom-control-input" 
+                                                    id="size_'.$size.'" 
+                                                    name="sizes[]" 
+                                                    value="'.$size.'" 
+                                                    '.$sizeChecked.'>
+                                                <label class="custom-control-label" for="size_'.$size.'">'.$size.'</label>
+                                            </div>';
+                                        }
+                                    } else {
+                                        echo '<p class="small text-muted">Chưa có size nào</p>';
                                     }
                                     ?>
                                 </div>
@@ -196,8 +215,6 @@ $productList = executeResult($sql)
                 if($item['price'] > $item['discount']) {
                     $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                 }
-
-                $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
                 
                 echo '
                 <div class="product-item-custom">
@@ -230,7 +247,6 @@ $productList = executeResult($sql)
                                     data-price="'.number_format($item['price'], 0, ',', '.').'₫"
                                     data-discount="'.number_format($item['discount'], 0, ',', '.').'₫"
                                     data-thumbnail="'.$item['thumbnail'].'"
-                                    data-sizes="'.$sizesAttr.'"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>

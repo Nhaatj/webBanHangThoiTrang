@@ -15,11 +15,13 @@ $productList = [];
 
 if($search != '') {
     // Xây dựng câu truy vấn SQL động
-    $sql = "SELECT Product.*, Category.name as category_name 
-        FROM Product 
-        LEFT JOIN Category ON Product.category_id = Category.id 
-        WHERE Product.title LIKE '%$search%' 
-        AND Product.deleted = 0";
+    // Lưu ý: Dùng DISTINCT vì khi lọc size (JOIN bảng Product_Size) có thể gây trùng lặp
+    $sql = "SELECT DISTINCT Product.*, Category.name as category_name
+            FROM Product
+            LEFT JOIN Category ON Product.category_id = Category.id
+            LEFT JOIN Product_Size ON Product.id = Product_Size.product_id
+            WHERE Product.title LIKE '%$search%'
+            AND Product.deleted = 0";
 
     // Nếu có chọn danh mục thì thêm điều kiện lọc
     // if ($category_id != '' && $category_id > 0) {
@@ -39,17 +41,14 @@ if($search != '') {
     }
 
     // --- LỌC THEO SIZE ---
-    // Logic: Sản phẩm được chọn nếu nó có chứa ÍT NHẤT 1 trong các size người dùng tick
     if (!empty($selected_sizes)) {
-        $size_conditions = [];
-        foreach ($selected_sizes as $size) {
-            // Vì trong DB lưu dạng JSON ["S","M"], nên ta tìm chuỗi chứa "S" (bao gồm dấu nháy)
-            // để tránh nhầm lẫn (ví dụ tìm L mà ra XL)
-            $size_conditions[] = "Product.sizes LIKE '%\"$size\"%'";
-        }
-        // Nối các điều kiện bằng OR và bao lại trong ngoặc đơn
-        // Ví dụ: AND (sizes LIKE '%"S"%' OR sizes LIKE '%"M"%')
-        $sql .= " AND (" . implode(' OR ', $size_conditions) . ")";
+        // Chuyển mảng size thành chuỗi: 'S','M','L' để dùng trong câu lệnh SQL IN
+        // Sử dụng array_map để thêm dấu nháy đơn cho an toàn
+        $size_list_sql = implode("','", $selected_sizes);
+        $size_list_sql = "'" . $size_list_sql . "'";
+
+        // Điều kiện: Tìm sản phẩm có size nằm trong danh sách chọn VÀ còn hàng
+        $sql .= " AND Product_Size.size_name IN ($size_list_sql) AND Product_Size.inventory_num > 0";
     }
 
     // Xử lý sắp xếp
@@ -68,6 +67,14 @@ if($search != '') {
     $productList = executeResult($sql);
 }
 
+// --- LẤY DANH SÁCH TẤT CẢ SIZE CÓ TRONG DB ĐỂ HIỂN THỊ BỘ LỌC ---
+    $sqlSize = "SELECT DISTINCT size_name FROM Product_Size WHERE inventory_num > 0 ORDER BY size_name ASC";
+    $sizeData = executeResult($sqlSize);
+    $listSizes = [];
+    foreach ($sizeData as $sItem) {
+        $listSizes[] = $sItem['size_name'];
+    }
+    // -----------------------------------------------------------------
 ?>
 
 <div class="container" style="margin-bottom: 50px;">
@@ -102,17 +109,21 @@ if($search != '') {
                                 
                                 <h6 class="dropdown-header font-weight-bold text-dark px-0" style="text-transform: uppercase;">Danh mục:</h6>
                                 <?php
-                                foreach ($menuItems as $item) {
-                                    $checked = in_array($item['id'], $category_ids) ? 'checked' : '';
-                                    echo '
-                                    <div class="custom-control custom-checkbox mb-2 ml-2">
-                                        <input type="checkbox" class="custom-control-input" 
-                                            id="cat_'.$item['id'].'" 
-                                            name="category_ids[]" 
-                                            value="'.$item['id'].'" 
-                                            '.$checked.'>
-                                        <label class="custom-control-label" for="cat_'.$item['id'].'">'.$item['name'].'</label>
-                                    </div>';
+                                // $menuItems lấy từ header.php
+                                // Lưu ý: header.php phải được require ở đầu file để có biến này
+                                if(isset($menuItems)) {
+                                    foreach ($menuItems as $item) {
+                                        $checked = in_array($item['id'], $category_ids) ? 'checked' : '';
+                                        echo '
+                                        <div class="custom-control custom-checkbox mb-2 ml-2">
+                                            <input type="checkbox" class="custom-control-input" 
+                                                id="cat_'.$item['id'].'" 
+                                                name="category_ids[]" 
+                                                value="'.$item['id'].'" 
+                                                '.$checked.'>
+                                            <label class="custom-control-label" for="cat_'.$item['id'].'">'.$item['name'].'</label>
+                                        </div>';
+                                    }
                                 }
                                 ?>
 
@@ -121,20 +132,22 @@ if($search != '') {
                                 <h6 class="dropdown-header font-weight-bold text-dark px-0" style="text-transform: uppercase;">Kích cỡ:</h6>
                                 <div class="d-flex flex-wrap ml-2">
                                     <?php
-                                    // Danh sách size cố định (giống trong trang Admin)
-                                    $listSizes = ['S', 'M', 'L', 'XL', 'XXL'];
-                                    
-                                    foreach ($listSizes as $size) {
-                                        $sizeChecked = in_array($size, $selected_sizes) ? 'checked' : '';
-                                        echo '
-                                        <div class="custom-control custom-checkbox mr-3 mb-2">
-                                            <input type="checkbox" class="custom-control-input" 
-                                                id="size_'.$size.'" 
-                                                name="sizes[]" 
-                                                value="'.$size.'" 
-                                                '.$sizeChecked.'>
-                                            <label class="custom-control-label" for="size_'.$size.'">'.$size.'</label>
-                                        </div>';
+                                    // Hiển thị danh sách size động từ DB
+                                    if(count($listSizes) > 0) {
+                                        foreach ($listSizes as $size) {
+                                            $sizeChecked = in_array($size, $selected_sizes) ? 'checked' : '';
+                                            echo '
+                                            <div class="custom-control custom-checkbox mr-3 mb-2">
+                                                <input type="checkbox" class="custom-control-input" 
+                                                    id="size_'.$size.'" 
+                                                    name="sizes[]" 
+                                                    value="'.$size.'" 
+                                                    '.$sizeChecked.'>
+                                                <label class="custom-control-label" for="size_'.$size.'">'.$size.'</label>
+                                            </div>';
+                                        }
+                                    } else {
+                                        echo '<p class="small text-muted">Chưa có size nào</p>';
                                     }
                                     ?>
                                 </div>
@@ -205,13 +218,6 @@ if($search != '') {
                     $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                 }
 
-                // Xử lý chuỗi JSON sizes an toàn
-                $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
-                
-                // Xử lý hiển thị giá
-                $price_display = number_format($item['discount'], 0, ',', '.').'<u>đ</u>';
-                $old_price_display = '<del>'.number_format($item['price'], 0, ',', '.').'<u>đ</u></del>';
-
                 echo '
                 <div class="product-item-custom">
                     <a href="detail.php?id='.$item['id'].'" style="text-decoration: none; color: inherit;">
@@ -244,7 +250,6 @@ if($search != '') {
                                     data-price="'.number_format($item['price'], 0, ',', '.').' đ"
                                     data-discount="'.number_format($item['discount'], 0, ',', '.').' đ"
                                     data-thumbnail="'.$item['thumbnail'].'"
-                                    data-sizes="'.$sizesAttr.'"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>

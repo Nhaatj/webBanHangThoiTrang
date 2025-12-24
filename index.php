@@ -52,9 +52,6 @@ require_once('layouts/header.php');
                     if($item['price'] > $item['discount']) {
                         $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                     }
-
-                    // 3. Xử lý chuỗi JSON sizes an toàn
-                    $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
                     
                     echo '
                     <div class="product-item-custom">
@@ -88,7 +85,6 @@ require_once('layouts/header.php');
                                         data-price="'.number_format($item['price'], 0, ',', '.').'₫"
                                         data-discount="'.number_format($item['discount'], 0, ',', '.').'₫"
                                         data-thumbnail="'.$item['thumbnail'].'"
-                                        data-sizes="'.$sizesAttr.'"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>
@@ -149,10 +145,7 @@ require_once('layouts/header.php');
                                     <div>
                                         <span class="product-discount">'.$formatted_price.'<u>đ</u></span>
                                         '.$old_price_html.'
-                                    </div>';
-                                    // Xử lý escape dấu nháy kép cho JSON size để tránh lỗi HTML
-                                    $sizesAttr = htmlspecialchars($pItem['sizes'], ENT_QUOTES, 'UTF-8');
-                                    echo '
+                                    </div>
                                     <button style="border: none; background-color: transparent" 
                                         onclick="event.preventDefault(); event.stopPropagation(); showQuickView(this)"
                                         data-id="'.$pItem['id'].'"
@@ -160,7 +153,6 @@ require_once('layouts/header.php');
                                         data-price="'.number_format($pItem['price'], 0, ',', '.').'₫"
                                         data-discount="'.number_format($pItem['discount'], 0, ',', '.').'₫"
                                         data-thumbnail="'.$pItem['thumbnail'].'"
-                                        data-sizes="'.$sizesAttr.'"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>

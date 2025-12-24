@@ -200,7 +200,7 @@
                 try {
                     var res = JSON.parse(data);
                     
-                    // Set mặc định là tổng tồn kho
+                    // Mặc định là tổng tồn kho (khi chưa chọn size)
                     qvMaxQty = parseInt(res.inventory_num);
                     $('#qv_inventory').text(qvMaxQty);
                     $('#qv_maxQty').text(qvMaxQty);
@@ -212,11 +212,12 @@
                             sizeHtml += `<span class="size-btn" onclick="selectQuickViewSize(this, '${s.name}', ${s.qty})">${s.name}</span>`;
                         });
                     } else {
-                        $('#qv_size_area').hide();
+                        $('#qv_size_area').hide(); // Ẩn vùng chọn size nếu không có size
                     }
                     $('#qv_size_list').html(sizeHtml);
                 } catch(e) {
-                    console.log(e);
+                    console.log("Lỗi parse JSON: " + e);
+                    $('#qv_size_list').html('Lỗi tải dữ liệu');
                 }
             });
 

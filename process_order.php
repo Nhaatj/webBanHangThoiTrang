@@ -4,7 +4,7 @@ require_once('utils/utility.php');
 require_once('database/dbhelper.php');
 require_once('config_vnpay.php');
 require_once('config_momo.php');
-
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 if (!empty($_POST)) {
     // --- THÊM ĐOẠN CODE KIỂM TRA NÀY ---
@@ -46,6 +46,7 @@ if (!empty($_POST)) {
     $final_total = $total_money + $shipping_fee;
 
     $order_date = date('Y-m-d H:i:s');
+
     $status = 0; // 0: Chờ xử lý/Chờ thanh toán
     
     $user_id = isset($_SESSION['user']) ? "'".$_SESSION['user']['id']."'" : "NULL"; // NULL nếu khách vãng lai

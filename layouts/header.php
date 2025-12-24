@@ -2,6 +2,7 @@
 session_start();
 require_once('utils/utility.php');
 require_once('database/dbhelper.php');
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 $sql = "select * from Category";
 $menuItems = executeResult($sql);
