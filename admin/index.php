@@ -61,7 +61,7 @@ foreach ($chartData as $item) {
 
     /* Phần nội dung bên trái (Số và Chữ) */
     .dashboard-card .card-info {
-        text-align: center;
+        text-align: left;
     }
     
     .dashboard-card .card-info h3 {
