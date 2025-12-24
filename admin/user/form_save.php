@@ -6,31 +6,26 @@ if (!empty($_POST)) {
   $phone_number = getPost('phone_number');
   $address = getPost('address');
   $password = getPost('password');
-  if ($password != '') {
-    $password = getSecurityMD5($password);
-  }
+  $password = getSecurityMD5($password);
   $created_at = $updated_at = date("Y-m-d H:i:s");
-
   $role_id = getPost('role_id');
 
   if ($id > 0) {
-    //Update
+    // --- UPDATE ---
+    // Kiểm tra email đã tồn tại chưa
     $sql = "select * from User where email = '$email' and id <> '$id'";
     $userItem = executeResult($sql, true);
 
     if ($userItem != null) {
       $msg = 'Email đã tồn tại, vui lòng kiểm tra lại!';
     } else {
-      if ($password != '') {
-        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', password = '$password', updated_at = '$updated_at', role_id = '$role_id' where id = $id";
-      } else {
-        $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', updated_at = '$updated_at', role_id = '$role_id' where id = $id";
-      }
+      $sql = "update User set fullname = '$fullname', email = '$email', phone_number = '$phone_number', address = '$address', updated_at = '$updated_at', role_id = '$role_id' where id = $id";
       execute($sql);
-      header('Location: index.php');
+      echo '<script>window.location.href = "index.php";</script>';
       die();
     }
   } else {
+    // --- INSERT ---
     $sql = "select * from User where email = '$email'";
     $userItem = executeResult($sql, true);
     //Insert
@@ -38,7 +33,7 @@ if (!empty($_POST)) {
       //Insert
       $sql = "insert into User(fullname, email, phone_number, address, password, role_id, created_at, updated_at, deleted) values ('$fullname', '$email', '$phone_number', '$address', '$password', '$role_id', '$created_at', '$updated_at', 0)";
       execute($sql);
-      header('Location: index.php');
+      echo '<script>window.location.href = "index.php";</script>';
       die();
     } else {
       //Tai khoan da ton tai -> failed

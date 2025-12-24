@@ -1,6 +1,7 @@
 <?php
 $title = 'Quản Lý Người Dùng';
 $baseUrl = '../';
+$titleHeader = 'Quản Lý Người Dùng';
 require_once('../layouts/header.php');
 
 $sql = "select User.*, Role.name as role_name from User left join Role on User.role_id = Role.id where User.deleted = 0";
@@ -9,9 +10,8 @@ $data = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12 table-responsive">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-            <h3 style="margin-bottom: 0;">Quản Lý Người Dùng</h3>
-            
+        <div>
+            <!-- <h3 style="margin-bottom: 0;">Quản Lý Người Dùng</h3> -->
             <a href="editor.php"><button class="btn btn-success">Thêm Tài Khoản</button></a>
         </div>
             

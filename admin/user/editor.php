@@ -1,6 +1,7 @@
 <?php
 $title = 'Thêm/Sửa Tài Khoản Người Dùng';
 $baseUrl = '../';
+$titleHeader = 'Thêm/Sửa Tài Khoản Người Dùng';
 require_once('../layouts/header.php');
 
 $id = $msg = $fullname = $email = $phone_number = $address = $role_id = '';
@@ -29,7 +30,7 @@ $roleItems = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
   <div class="col-md-12 table-responsive">
-    <h3>Thêm/Sửa Tài Khoản Người Dùng</h3>
+    <!-- <h3>Thêm/Sửa Tài Khoản Người Dùng</h3> -->
 
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -67,23 +68,26 @@ $roleItems = executeResult($sql);
           </div>
           <div class="form-group">
             <label for="phone_number">SĐT:</label>
-            <input required="true" type="tel" class="form-control" id="phone_number" name="phone_number" value="<?= $phone_number ?>">
+            <input type="tel" class="form-control" id="phone_number" name="phone_number" value="<?= $phone_number ?>">
           </div>
           <div class="form-group">
             <label for="address">Địa Chỉ:</label>
-            <input required="true" type="text" class="form-control" id="address" name="address" value="<?= $address ?>">
+            <input type="text" class="form-control" id="address" name="address" value="<?= $address ?>">
           </div>
-          <div class="form-group">
-            <label for="pwd">Mật Khẩu:</label>
-            <input <?= ($id > 0 ? '' : 'required="true"') ?> type="password" class="form-control" id="pwd" name="password" minlength="6">
-            <p id="msg_pwd" style="color: red; font-size: 14px; font-style: italic; margin-top: 2px;"></p>
-          </div>
-          <div class="form-group" style="margin-bottom: 30px;">
-            <label for="confirmation_pwd">Xác Minh Mật Khẩu:</label>
-            <input <?= ($id > 0 ? '' : 'required="true"') ?> type="password" class="form-control" id="confirmation_pwd">
-            <p id="msg_confirmation_pwd" style="color: red; font-size: 14px; font-style: italic; margin-top: 2px;"></p>
-          </div>
-          <button class="btn btn-success" style="background-color: rgba(0, 0, 255, 0.621);  width: 20%; font-weight: bold">Lưu</button>
+          <?php if($id == 0) { ?>
+            <div class="form-group">
+              <label for="pwd">Mật Khẩu:</label>
+              <input required="true" type="password" class="form-control" id="pwd" name="password" minlength="6">
+              <p id="msg_pwd" style="color: red; font-size: 14px; font-style: italic; margin-top: 2px;"></p>
+            </div>
+            <div class="form-group">
+              <label for="confirmation_pwd">Xác Minh Mật Khẩu:</label>
+              <input required="true" type="password" class="form-control" id="confirmation_pwd">
+              <p id="msg_confirmation_pwd" style="color: red; font-size: 14px; font-style: italic; margin-top: 2px;"></p>
+            </div>
+          <?php } ?>
+          
+          <button class="btn btn-success" style="background-color: rgba(0, 0, 255, 0.621);  width: 20%; font-weight: bold; margin-top: 14px;"">Lưu</button>
         </form>
       </div>
     </div>

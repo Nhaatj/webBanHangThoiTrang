@@ -50,7 +50,7 @@ require_once('layouts/header.php');
                     // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
                     $old_price_html = '';
                     if($item['price'] > $item['discount']) {
-                        $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                        $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                     }
 
                     // 3. Xử lý chuỗi JSON sizes an toàn
@@ -77,7 +77,7 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$item['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                    <div>
-                                        <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                        <span class="product-discount">'.$formatted_price.'<u>đ</u></span>
                                         '.$old_price_html.'
                                     </div>
                                     
@@ -85,8 +85,8 @@ require_once('layouts/header.php');
                                         onclick="event.preventDefault(); event.stopPropagation(); showQuickView(this)"
                                         data-id="'.$item['id'].'"
                                         data-title="'.$item['title'].'"
-                                        data-price="'.number_format($item['price']).' đ"
-                                        data-discount="'.number_format($item['discount']).' đ"
+                                        data-price="'.number_format($item['price'], 0, ',', '.').'₫"
+                                        data-discount="'.number_format($item['discount'], 0, ',', '.').'₫"
                                         data-thumbnail="'.$item['thumbnail'].'"
                                         data-sizes="'.$sizesAttr.'"
                                     >
@@ -106,7 +106,7 @@ require_once('layouts/header.php');
         <!-- Danh mục sản phẩm -->
         <?php
             foreach($menuItems as $item) {
-                $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = ".$item['id']." order by Product.updated_at desc limit 0,10"; 
+                $sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.category_id = ".$item['id']." and Product.deleted = 0 order by Product.updated_at desc limit 0,10"; 
                 // Lưu ý: Tăng limit lên 10 hoặc bỏ limit để test tính năng trượt ngang
                 
                 $items = executeResult($sql);
@@ -128,7 +128,7 @@ require_once('layouts/header.php');
                     // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
                     $old_price_html = '';
                     if($pItem['price'] > $pItem['discount']) {
-                        $old_price_html = '<span class="product-price"><del>' . number_format($pItem['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                        $old_price_html = '<span class="product-price"><del>' . number_format($pItem['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                     }
 
                     echo '
@@ -147,7 +147,7 @@ require_once('layouts/header.php');
                                 <p class="product-title">'.$pItem['title'].'</p>
                                 <div style="display: flex; align-items: center; justify-content: space-between">
                                     <div>
-                                        <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                        <span class="product-discount">'.$formatted_price.'<u>đ</u></span>
                                         '.$old_price_html.'
                                     </div>';
                                     // Xử lý escape dấu nháy kép cho JSON size để tránh lỗi HTML
@@ -157,8 +157,8 @@ require_once('layouts/header.php');
                                         onclick="event.preventDefault(); event.stopPropagation(); showQuickView(this)"
                                         data-id="'.$pItem['id'].'"
                                         data-title="'.$pItem['title'].'"
-                                        data-price="'.number_format($pItem['price']).' đ"
-                                        data-discount="'.number_format($pItem['discount']).' đ"
+                                        data-price="'.number_format($pItem['price'], 0, ',', '.').'₫"
+                                        data-discount="'.number_format($pItem['discount'], 0, ',', '.').'₫"
                                         data-thumbnail="'.$pItem['thumbnail'].'"
                                         data-sizes="'.$sizesAttr.'"
                                     >

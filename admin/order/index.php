@@ -1,6 +1,7 @@
 <?php
 $title = 'Quản Lý Đơn Hàng';
 $baseUrl = '../';
+$titleHeader = 'Quản Lý Đơn Hàng';
 require_once('../layouts/header.php');
 
 
@@ -14,7 +15,7 @@ $data = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12 table-responsive">
-        <h3 style="margin-bottom: 10px;">Quản Lý Đơn Hàng</h3>
+        <!-- <h3 style="margin-bottom: 10px;">Quản Lý Đơn Hàng</h3> -->
 
         <table class="table table-bordered table-hover">
             <thead>
@@ -42,7 +43,7 @@ $data = executeResult($sql);
                             <td>' . $item['email'] . '</td>
                             <td>' . $item['address'] . '</td>
                             <td>' . $item['note'] . '</td>
-                            <td class="text-right">' . $item['total_money'] . '₫</td>
+                            <td class="text-right">' . number_format($item['total_money'], 0, ',', '.') . '₫</td>
                             <td>' . $item['order_date'] . '</td>
                             <td>';
                                 if ($item['status'] == 0) {

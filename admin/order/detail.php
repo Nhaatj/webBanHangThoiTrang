@@ -1,6 +1,7 @@
 <?php
 $title = 'Thông Tin Chi Tiết Đơn Hàng';
 $baseUrl = '../';
+$titleHeader = 'Chi Tiết Đơn Hàng';
 require_once('../layouts/header.php');
 
 $orderId = getGet('id');
@@ -19,11 +20,11 @@ $orderItem = executeResult($sql, true);
 ?>
 
 <div class="row" style="margin-top: 20px;">
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
         <h3>Chi Tiết Đơn Hàng</h3>
-    </div>
+    </div> -->
 
-    <div class="col-md-8 table-responsive" style="margin-top: 20px;">
+    <div class="col-md-8 table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -43,9 +44,9 @@ $orderItem = executeResult($sql, true);
                             <td>' . (++$index) . '</td>
                             <td><img src="'.fixUrl($item['thumbnail'], '../../').'" style="height: 120px"/></td>
                             <td>' . $item['title'] . '</td>
-                            <td class="text-right">' . $item['price'] . '₫</td>
+                            <td class="text-right">' . number_format($item['price'], 0, ',', '.') . '₫</td>
                             <td class="text-right">' . $item['num'] . '</td>
-                            <td class="text-right">' . $item['total_money'] . '₫</td>
+                            <td class="text-right">' . number_format($item['total_money'], 0, ',', '.') . '₫</td>
                         </tr>';
 
                 }
@@ -62,7 +63,7 @@ $orderItem = executeResult($sql, true);
             </tbody>
         </table>
     </div>
-    <div class="col-md-4" style="margin-top: 20px;">
+    <div class="col-md-4">
       <table class="table table-bordered table-hover">
         <tr>
           <th>Họ & Tên:</th>

@@ -19,6 +19,8 @@ if($user['role_id'] != 1) {
     header('Location: '.$baseUrl.'../index.php');
     die();
 }
+
+$current_page = basename(dirname($_SERVER['PHP_SELF']));
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +36,7 @@ if($user['role_id'] != 1) {
 
     <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -49,10 +52,6 @@ if($user['role_id'] != 1) {
             border-bottom: 1px solid rgba(58, 75, 92, 0.2);
             margin: 0;
         }
-
-        .logout {
-            padding: 0 1rem;
-        }
     </style>
 
 </head>
@@ -60,7 +59,7 @@ if($user['role_id'] != 1) {
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="<?=$baseUrl?>../index.php">M&N</a>
     <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Tìm kiếm" aria-label="Search"> -->
-    
+    <h3><?= $titleHeader ?></h3>
 </nav>
 <div class="container-fluid">
     <div class="row">
@@ -68,37 +67,37 @@ if($user['role_id'] != 1) {
             <div class="sidebar-sticky d-flex flex-column" style="height: calc(100vh - 48px);">
                 <ul class="nav flex-column" style="padding-bottom: .75rem; font-size: 1rem">
                     <li class="nav-item">
-                        <a class="nav-link active" href="<?=$baseUrl?>">
+                        <a class="nav-link <?= ($current_page == 'admin') ? 'active' : '' ?>" href="<?=$baseUrl?>">
                             <i class="bi bi-house-fill"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=$baseUrl?>category">
+                        <a class="nav-link <?= ($current_page == 'category') ? 'active' : '' ?>" href="<?=$baseUrl?>category">
                             <i class="bi bi-folder"></i>
                             Danh Mục Sản Phẩm
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=$baseUrl?>product">
+                        <a class="nav-link <?= ($current_page == 'product') ? 'active' : '' ?>" href="<?=$baseUrl?>product">
                             <i class="bi bi-file-earmark-text"></i>
                             Sản Phẩm
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=$baseUrl?>order">
+                        <a class="nav-link <?= ($current_page == 'order') ? 'active' : '' ?>" href="<?=$baseUrl?>order">
                             <i class="bi bi-minecart"></i>
                             Đơn Hàng
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=$baseUrl?>feedback">
+                        <a class="nav-link <?= ($current_page == 'feedback') ? 'active' : '' ?>" href="<?=$baseUrl?>feedback">
                             <i class="bi bi-question-circle-fill"></i>
                             Phản Hồi
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=$baseUrl?>user">
+                        <a class="nav-link <?= ($current_page == 'user') ? 'active' : '' ?>" href="<?=$baseUrl?>user">
                             <i class="bi bi-people-fill"></i>
                             Người Dùng
                         </a>

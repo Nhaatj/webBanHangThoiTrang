@@ -12,6 +12,8 @@ if ($action == 'login') {
     doLogout();
 } elseif ($action == 'update_profile') {
     updateProfile();
+} elseif ($action == 'change_password') {
+    changePassword();
 }
 
 function doLogin() {
@@ -76,5 +78,42 @@ function updateProfile() {
     $_SESSION['user'] = $newUser;
 
     header('Location: ../account.php?msg=success');
+}
+
+function changePassword() {
+    if (!isset($_SESSION['user'])) {
+        echo 'Vui lòng đăng nhập!';
+        die();
+    }
+
+    $old_pass = getPost('old_pass');
+    $new_pass = getPost('new_pass');
+    $user = $_SESSION['user'];
+    $userId = $user['id'];
+
+    // Kiểm tra mật khẩu cũ
+    $old_pass_hash = getSecurityMD5($old_pass);
+    
+    // Lấy lại pass thật trong DB để so sánh (đề phòng session cũ)
+    $sql = "select password from User where id = $userId";
+    $check = executeResult($sql, true);
+
+    if ($check['password'] != $old_pass_hash) {
+        echo 'Mật khẩu cũ không chính xác!';
+        die();
+    }
+
+    if ($old_pass == $new_pass) {
+        echo 'Mật khẩu mới giống mật khẩu cũ, vui lòng kiểm tra lại!';
+        die();
+    }
+
+    // Cập nhật mật khẩu mới
+    $new_pass_hash = getSecurityMD5($new_pass);
+    $sql = "update User set password = '$new_pass_hash', updated_at = now() where id = $userId";
+    execute($sql);
+
+    echo 'success';
+    die();
 }
 ?>

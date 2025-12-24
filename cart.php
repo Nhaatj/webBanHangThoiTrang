@@ -232,6 +232,17 @@ $final_total = $total_money + $shipping_fee;
                             <?php 
                             // Ở đây chỉ cần lặp để hiển thị, vì tổng tiền đã tính ở đầu file
                             foreach ($_SESSION['cart'] as $index => $item):
+                                // Lấy tồn kho thực tế của sản phẩm/size này
+                                $stock = 0;
+                                if (!empty($item['size'])) {
+                                    $sql = "select inventory_num from Product_Size where product_id = " . $item['id'] . " and size_name = '" . $item['size'] . "'";
+                                    $res = executeResult($sql, true);
+                                    if($res) $stock = $res['inventory_num'];
+                                } else {
+                                    $sql = "select inventory_num from Product where id = " . $item['id'];
+                                    $res = executeResult($sql, true);
+                                    if($res) $stock = $res['inventory_num'];
+                                }
                             ?>
                             <div class="cart-item">
                                 <div class="d-flex">
@@ -252,9 +263,9 @@ $final_total = $total_money + $shipping_fee;
                                         </div>
                                         <div class="d-flex justify-content-between align-items-end">
                                             <div class="d-flex align-items-center">
-                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, -1)">-</button>
-                                                <input type="text" class="qty-input" value="<?= $item['num'] ?>" readonly>
-                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, 1)">+</button>
+                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, -1, <?= $stock ?>)">-</button>
+                                                <input type="text" id="qty_<?=$index?>" class="qty-input" value="<?= $item['num'] ?>" readonly>
+                                                <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, 1, <?= $stock ?>)">+</button>
                                             </div>
                                             <?php
                                                 $total_price_items = $item['discount'] * $item['num'];
@@ -263,6 +274,7 @@ $final_total = $total_money + $shipping_fee;
                                                 <div style="font-size: 15px;"><?= number_format($total_price_items, 0, ',', '.') ?>₫</div>
                                             </div>
                                         </div>
+                                        <div id="err_<?=$index?>" style="color: red; font-size: 12px; font-style: italic; display: none;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +311,29 @@ $final_total = $total_money + $shipping_fee;
 </div>
 
 <script>
-    function updateQuantity(index, delta) {
+    function updateQuantity(index, delta, maxStock) {
+        var input = $('#qty_' + index);
+        var currentQty = parseInt(input.val());
+        var newQty = currentQty + delta;
+        var errBox = $('#err_' + index);
+
+        // Xóa lỗi cũ
+        errBox.hide().text('');
+        
+        if (newQty < 1) {
+            // Logic xóa sản phẩm (gọi api delete)
+            location.href = 'api/cart_actions.php?action=delete&index=' + index;
+            return;
+        }
+
+        if (newQty > maxStock) {
+            errBox.text('Kho chỉ còn ' + maxStock + ' sản phẩm').show();
+                // Tự động ẩn sau 3 giây
+                setTimeout(function() {
+                    errBox.fadeOut();
+                }, 3000);
+            return; // Không cho tăng
+        }
         window.location.href = 'api/cart_actions.php?action=update&index=' + index + '&delta=' + delta;
     }
 

@@ -202,15 +202,15 @@ if($search != '') {
                 // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
                 $old_price_html = '';
                 if($item['price'] > $item['discount']) {
-                    $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                    $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                 }
 
                 // Xử lý chuỗi JSON sizes an toàn
                 $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
                 
                 // Xử lý hiển thị giá
-                $price_display = number_format($item['discount']).'<sup><u>đ</u></sup>';
-                $old_price_display = '<del>'.number_format($item['price']).'<sup><u>đ</u></sup></del>';
+                $price_display = number_format($item['discount'], 0, ',', '.').'<u>đ</u>';
+                $old_price_display = '<del>'.number_format($item['price'], 0, ',', '.').'<u>đ</u></del>';
 
                 echo '
                 <div class="product-item-custom">
@@ -233,7 +233,7 @@ if($search != '') {
                             <p class="product-title">'.$item['title'].'</p>
                             <div style="display: flex; align-items: center; justify-content: space-between">
                                 <div>
-                                    <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                    <span class="product-discount">'.$formatted_price.'<u>đ</u></span>
                                     '.$old_price_html.'
                                 </div>
                                 
@@ -241,8 +241,8 @@ if($search != '') {
                                     onclick="event.preventDefault(); event.stopPropagation(); showQuickView(this)"
                                     data-id="'.$item['id'].'"
                                     data-title="'.$item['title'].'"
-                                    data-price="'.number_format($item['price']).' đ"
-                                    data-discount="'.number_format($item['discount']).' đ"
+                                    data-price="'.number_format($item['price'], 0, ',', '.').' đ"
+                                    data-discount="'.number_format($item['discount'], 0, ',', '.').' đ"
                                     data-thumbnail="'.$item['thumbnail'].'"
                                     data-sizes="'.$sizesAttr.'"
                                 >

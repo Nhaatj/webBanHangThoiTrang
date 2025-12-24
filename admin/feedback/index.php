@@ -1,6 +1,7 @@
 <?php
 $title = 'Quản Lý Phản Hồi';
 $baseUrl = '../';
+$titleHeader = 'Quản Lý Phản Hồi';
 require_once('../layouts/header.php');
 
 // Lấy danh sách phản hồi chưa bị xóa (status != 3)
@@ -13,7 +14,7 @@ $data = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
-        <h3 style="margin-bottom: 0;">Quản Lý Phản Hồi</h3>
+        <!-- <h3 style="margin-bottom: 0;">Quản Lý Phản Hồi</h3> -->
         <div>
             <button class="btn btn-warning" onclick="markRead()">Đã Đọc</button>
             <button class="btn btn-danger" onclick="deleteFeedback()">Xóa</button>

@@ -238,10 +238,6 @@ main {
   margin-bottom: 10px;
 }
 
-sup {
-  font-size: 65%;
-}
-
 /* Responsive cho mobile: Hiển thị 2 sản phẩm 1 hàng để dễ nhìn */
 @media (max-width: 768px) {
   .product-item-custom {

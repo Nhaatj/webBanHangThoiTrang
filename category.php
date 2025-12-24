@@ -194,7 +194,7 @@ $productList = executeResult($sql)
                 // 2. Xử lý Giá cũ (Chỉ hiện nếu có giảm giá)
                 $old_price_html = '';
                 if($item['price'] > $item['discount']) {
-                    $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<sup><u>đ</u></sup></del></span>';
+                    $old_price_html = '<span class="product-price"><del>' . number_format($item['price'], 0, ',', '.') . '<u>đ</u></del></span>';
                 }
 
                 $sizesAttr = isset($item['sizes']) ? htmlspecialchars($item['sizes'], ENT_QUOTES, 'UTF-8') : '';
@@ -219,7 +219,7 @@ $productList = executeResult($sql)
                             <p class="product-title">'.$item['title'].'</p>
                             <div style="display: flex; align-items: center; justify-content: space-between">
                                 <div>
-                                    <span class="product-discount">'.$formatted_price.'<sup><u>đ</u></sup></span>
+                                    <span class="product-discount">'.$formatted_price.'<u>đ</u></span>
                                     '.$old_price_html.'
                                 </div>
                                 
@@ -227,8 +227,8 @@ $productList = executeResult($sql)
                                     onclick="event.preventDefault(); event.stopPropagation(); showQuickView(this)"
                                     data-id="'.$item['id'].'"
                                     data-title="'.$item['title'].'"
-                                    data-price="'.number_format($item['price']).' đ"
-                                    data-discount="'.number_format($item['discount']).' đ"
+                                    data-price="'.number_format($item['price'], 0, ',', '.').'₫"
+                                    data-discount="'.number_format($item['discount'], 0, ',', '.').'₫"
                                     data-thumbnail="'.$item['thumbnail'].'"
                                     data-sizes="'.$sizesAttr.'"
                                 >

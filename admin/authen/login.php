@@ -28,7 +28,7 @@ if ($user != null) {
 
 <body style="background-image: url(../../assets/photos/ecommerce2.jpg); background-size: cover; background-repeat: no-repeat; height: 100vh;">
 	<div class="container">
-		<div class="panel panel-primary" style="width: 480px; margin: 0px auto; margin-top: 50px; background-color: rgba(255, 255, 255, 0.585); padding: 30px; border-radius: 5px; box-shadow: 1rem 2.4rem 4.8rem rgb(183, 235, 244);">
+		<div class="panel panel-primary" style="width: 480px; margin: 0px auto; margin-top: 50px; background-color: rgba(255, 255, 255, 0.785); padding: 30px; border-radius: 5px; box-shadow: 1rem 2.4rem 4.8rem rgb(183, 235, 244);">
 			<div class="panel-heading">
 				<h2 class="text-center">Đăng Nhập</h2>
 				<h5 id="msg_error" style="color: red; font-size: 20px" class="text-center"><?= $msg ?></h5>
@@ -45,10 +45,11 @@ if ($user != null) {
 						<input required="true" type="password" class="form-control" id="pwd" name="password" minlength="6"
 							style="<?= ($msg != '') ? 'border: 1px solid red;' : '' ?>">
 					</div>
-					<p>
-						<a href="register.php" style="font-size: 14px; font-weight: normal;text-decoration: underline;text-underline-offset: 2px; text-decoration-color: #007bff;">Đăng ký tài khoản mới</a>
-					</p>
-					<button class="btn btn-success" style="background-color: rgba(0, 0, 255, 0.621);  width: 30%; font-weight: bold">Đăng Nhập</button>
+					<div style="margin-top: 15px; font-size: 14px; font-weight: normal;">
+						<div>Chưa có tài khoản? <a href="register.php" style="text-decoration: underline; text-underline-offset: 2px;  text-decoration-color: #007bff;">Đăng ký tài khoản mới</a></div>
+						<div>Quên mật khẩu? <a href="forgot_password.php"style="text-decoration: underline; text-underline-offset: 2px;  text-decoration-color: #007bff;">Khôi phục mật khẩu</a></div>
+					</div>
+					<button class="btn btn-success" style="margin-top: 16px; background-color: rgba(0, 0, 255, 0.621);  width: 30%; font-weight: bold">Đăng Nhập</button>
 				</form>
 			</div>
 		</div>

@@ -18,35 +18,48 @@ if (isset($_SESSION['cart']) && isset($_SESSION['cart'][$index])) {
         case 'delete':
             // Xóa khỏi Session: xóa phần tử tại vị trí $index và sắp xếp lại chỉ số mảng
             array_splice($_SESSION['cart'], $index, 1);
-            break;
 
             // Xóa khỏi DB (Nếu đã đăng nhập)
             if (isset($_SESSION['user'])) {
                 $userId = $_SESSION['user']['id'];
                 execute("DELETE FROM Cart WHERE user_id = $userId AND product_id = $productId AND size = '$size'");
             }
+            break;
+
         case 'update':
             $delta = getGet('delta'); // Lấy giá trị tăng giảm (+1 hoặc -1)
             $current_qty = $_SESSION['cart'][$index]['num'];
             $new_qty = $current_qty + $delta;
 
-            if ($new_qty <= 0) {
-                // LOGIC: Nếu số lượng mới <= 0 -> Xóa luôn sản phẩm
-                array_splice($_SESSION['cart'], $index, 1);
-                if (isset($_SESSION['user'])) {
-                    $userId = $_SESSION['user']['id'];
-                    execute("DELETE FROM Cart WHERE user_id = $userId AND product_id = $productId AND size = '$size'");
-                }
+            // Ngược lại -> Cập nhật số lượng mới
+            // CHECK TỒN KHO TRƯỚC KHI UPDATE
+            $stock = 0;
+            if ($size != '') {
+                // Check bảng Size
+                $sql = "select inventory_num from Product_Size where product_id = $productId and size_name = '$size'";
+                $res = executeResult($sql, true);
+                // Nếu size không tồn tại (lỗi data) thì stock = 0
+                $stock = ($res != null) ? $res['inventory_num'] : 0;
             } else {
-                // Ngược lại -> Cập nhật số lượng mới
-                // Update Session
-                $_SESSION['cart'][$index]['num'] = $new_qty;
+                // Check bảng Product
+                $sql = "select inventory_num from Product where id = $productId";
+                $res = executeResult($sql, true);
+                $stock = $res['inventory_num'];
+            }
 
-                // Update DB (Nếu đã đăng nhập)
-                if (isset($_SESSION['user'])) {
-                    $userId = $_SESSION['user']['id'];
-                    execute("UPDATE Cart SET num = $new_qty WHERE user_id = $userId AND product_id = $productId AND size = '$size'");
-                }
+            if ($new_qty > $stock) {
+                // Nếu vượt quá -> Không cho tăng -> Giữ nguyên số lượng cũ
+                // Hoặc set bằng max stock (tùy bạn chọn)
+                $new_qty = $stock; 
+            }
+
+            // Update Session
+            $_SESSION['cart'][$index]['num'] = $new_qty;
+
+            // Update DB
+            if (isset($_SESSION['user'])) {
+                $userId = $_SESSION['user']['id'];
+                execute("UPDATE Cart SET num = $new_qty WHERE user_id = $userId AND product_id = $productId AND size = '$size'");
             }
             break;
     }

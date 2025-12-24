@@ -1,6 +1,7 @@
 <?php
 $title = 'Quản Lý Danh Mục Sản Phẩm';
 $baseUrl = '../';
+$titleHeader = 'Quản Lý Danh Mục Sản Phẩm';
 require_once('../layouts/header.php');
 
 $id = $name = $banner = '';
@@ -21,9 +22,9 @@ $data = executeResult($sql);
 ?>
 
 <div class="row" style="margin-top: 20px;">
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
         <h3 style="margin-bottom: 16px;">Quản Lý Danh Mục Sản Phẩm</h3>
-    </div>    
+    </div> -->
     <div class="col-md-6">
         <form method="post" action="index.php" onsubmit="return validateForm();" style="font-weight: 700" enctype="multipart/form-data">
             <div class="form-group">

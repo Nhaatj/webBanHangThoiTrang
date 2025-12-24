@@ -1,10 +1,10 @@
 <?php
 $title = 'Thêm/Sửa Sản Phẩm';
 $baseUrl = '../';
+$titleHeader = 'Thêm/Sửa Sản Phẩm';
 require_once('../layouts/header.php');
 
-$id = $thumbnail = $title = $price = $discount = $category_id = $description = '';
-$sizes = [];
+$id = $thumbnail = $title = $price = $discount = $inventory_num = $category_id = $description = '';
 require_once('form_save.php');
 
 $id = getGet('id');
@@ -16,21 +16,9 @@ if ($id != '' && $id > 0) {
         $title = $userItem['title'];
         $price = $userItem['price'];
         $discount = $userItem['discount'];
+        $inventory_num = $userItem['inventory_num'];
         $category_id = $userItem['category_id'];
         $description = $userItem['description'];
-
-        // --- THÊM ĐOẠN NÀY ---
-        // Nếu trong DB có dữ liệu thì decode JSON, nếu không thì để mảng rỗng
-        if (!empty($userItem['sizes'])) {
-            $sizes = json_decode($userItem['sizes'], true); // biến chuối kí tự thành dạng mảng ('[S, M, L]' -> [S,M,L])
-            // Giả sử $userItem['sizes'] chứa chuỗi JSON sau: '{"dai": 100, "rong": 50}'
-            // Kết quả là Mảng (Array):
-            // [
-            //    "dai" => 100,
-            //    "rong" => 50
-            // ]
-        }
-        // ---------------------
     } else {
         $id = 0;
     }
@@ -47,7 +35,7 @@ $categoryItems = executeResult($sql);
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12 table-responsive">
-        <h3>Thêm/Sửa Sản Phẩm</h3>
+        <!-- <h3>Thêm/Sửa Sản Phẩm</h3> -->
         <div class="panel panel-primary">
             <div class="panel-body">
                 <form method="post" style="font-weight: 700" enctype="multipart/form-data">
@@ -70,7 +58,7 @@ $categoryItems = executeResult($sql);
                                 <!-- <label for="thumbnail">Thumbnail:</label>
                                 <input required="true" type="text" class="form-control" id="thumbnail" name="thumbnail" value="<?= $thumbnail ?>" onchange="updateThumbnail()">
                                 <img id="thumbnail_img" src="<?= $thumbnail ?>" style="max-height: 200px; margin-top: 5px; margin-bottom: 10px; max-width: 100%;"> -->
-                                <label for="thumbnail_url">Thumbnail (File/URL):</label>
+                                <label>Thumbnail (File/URL):</label>
                                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept=".avif, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" onchange="updateThumbnail()" style="margin-bottom: 10px;">
                                 <!-- <img id=" thumbnail_img" src="<?= fixUrl($thumbnail, '../../') ?>" style="max-height: 200px; margin-top: 5px; margin-bottom: 10px; max-width: 100%;"> -->
                                 <input type="text" class="form-control" id="thumbnail_url" name="thumbnail_url" value="<?= (strpos($thumbnail, 'http') !== false ? $thumbnail : '') ?>" placeholder="Nhập URL..." oninput="updateThumbnail()">
@@ -78,26 +66,6 @@ $categoryItems = executeResult($sql);
 
                             <div class="form-group">
                                 <img id="thumbnail_img" src="<?= ($thumbnail != '') ? fixUrl($thumbnail, '../../') : 'https://placehold.co/600x400?text=No+Image' ?>" style="max-height: 160px; margin-top: 5px; margin-bottom: 10px; max-width: 100%; object-fit: contain; border: 1px solid #ccc;">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Size:</label>
-                                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                                    <?php 
-                                    // Danh sách các size định nghĩa sẵn
-                                    $availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
-
-                                    foreach ($availableSizes as $sizeItem) {
-                                        // Kiểm tra xem size này đã được chọn trước đó chưa
-                                        $checked = in_array($sizeItem, $sizes) ? 'checked' : '';
-                                        echo '
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="size_'.$sizeItem.'" name="sizes[]" value="'.$sizeItem.'" '.$checked.'>
-                                            <label class="custom-control-label" for="size_'.$sizeItem.'">'.$sizeItem.'</label>
-                                        </div>';
-                                    }
-                                    ?>
-                                </div>
                             </div>
 
                             <div class="form-group">
@@ -115,14 +83,69 @@ $categoryItems = executeResult($sql);
                                     ?>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="price">Giá:</label>
-                                <input required="true" type="number" class="form-control" id="price" name="price" value="<?= $price ?>">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div class="form-group" style="width: 45%">
+                                    <label for="price">Giá:</label>
+                                    <input required="true" type="number" class="form-control" id="price" name="price" value="<?= $price ?>" min="0">
+                                </div>
+                                <div class="form-group" style="width: 45%">
+                                    <label for="discount">Giảm Giá:</label>
+                                    <input required="true" type="number" class="form-control" id="discount" name="discount" value="<?= $discount ?>" min="0">
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="discount">Giảm Giá:</label>
-                                <input required="true" type="number" class="form-control" id="discount" name="discount" value="<?= $discount ?>">
+                                <label>Quản lý tồn kho theo Size (Nếu SP có size, chỉ nhập tồn kho ở đây, ngược lại thì nhập vào ô "Tổng tồn kho" bên dưới):</label>
+                                
+                                <table class="table table-bordered" id="size_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên Size (S, M, L, 39, 40...)</th>
+                                            <th>Số lượng tồn kho</th>
+                                            <th><button type="button" class="btn btn-sm btn-success" onclick="addSizeRow()">+</button></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // Lấy danh sách size hiện có nếu đang sửa sản phẩm
+                                        $sizeList = [];
+                                        if (isset($id) && $id > 0) {
+                                            $sql = "SELECT * FROM Product_Size WHERE product_id = $id";
+                                            $sizeList = executeResult($sql);
+                                        }
+                                        
+                                        if (count($sizeList) > 0) {
+                                            foreach ($sizeList as $item) {
+                                                echo '<tr>
+                                                    <td><input type="text" name="size_names[]" class="form-control" value="'.$item['size_name'].'" required></td>
+                                                    <td><input type="number" name="size_quantities[]" class="form-control" value="'.$item['inventory_num'].'" required min="1"></td>
+                                                    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button></td>
+                                                </tr>';
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
+
+                            <div class="form-group">
+                                <label for="inventory_num">Tổng tồn kho (dành cho SP không có size):</label>
+                                <input type="number" class="form-control" id="inventory_num" name="inventory_num" value="<?=$inventory_num?>" min="1">
+                            </div>
+
+                            <script>
+                                function addSizeRow() {
+                                    var html = `<tr>
+                                                    <td><input type="text" name="size_names[]" class="form-control" placeholder="VD: XL" required></td>
+                                                    <td><input type="number" name="size_quantities[]" class="form-control" placeholder="0" required min="0"></td>
+                                                    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button></td>
+                                                </tr>`;
+                                    $('#size_table tbody').append(html);
+                                }
+
+                                function removeRow(btn) {
+                                    $(btn).closest('tr').remove();
+                                }
+                            </script>
                         </div>
                     </div>
                 </form>
@@ -133,9 +156,9 @@ $categoryItems = executeResult($sql);
 
 <script>
     $('#description').summernote({
-        placeholder: 'Hello stand alone ui',
+        placeholder: 'Mô tả sản phẩm...',
         tabsize: 2,
-        height: 300,
+        height: 400,
         toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'underline', 'clear']],

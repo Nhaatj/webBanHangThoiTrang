@@ -123,3 +123,17 @@ CREATE TABLE Cart (
     FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE
 );
+
+-- quản lý tổng lượng hàng tồn kho cho SP có size và lượng hàng tồn kho cho SP không có size
+ALTER TABLE Product ADD COLUMN inventory_num INT DEFAULT 0;
+
+-- quản lý lượng hàng tồn kho theo từng size của từng SP
+CREATE TABLE Product_Size (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT NOT NULL,
+    size_name VARCHAR(50) NOT NULL,
+    inventory_num INT DEFAULT 0,
+    FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE
+);
+
+ALTER TABLE Product DROP COLUMN sizes;

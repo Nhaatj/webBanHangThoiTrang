@@ -6,7 +6,7 @@ require_once('database/dbhelper.php');
 $sql = "select * from Category";
 $menuItems = executeResult($sql);
 
-$sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id order by Product.updated_at desc limit 0,10";
+$sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.deleted = 0 order by Product.updated_at desc limit 0,10";
 $latestItems = executeResult(sql: $sql);
 
 $user = getUserToken();
@@ -95,7 +95,7 @@ $user = getUserToken();
 
                                         <div style="margin-top: 15px; font-size: 13px;">
                                             Khách hàng mới? <a href="admin/authen/register.php" style="color: #000; font-weight: bold;">Tạo tài khoản</a><br>
-                                            Quên mật khẩu? <a href="#" style="color: #000; font-weight: bold;">Khôi phục mật khẩu</a>
+                                            Quên mật khẩu? <a href="admin/authen/forgot_password.php" style="color: #000; font-weight: bold;">Khôi phục mật khẩu</a>
                                         </div>
                                     </div>
                                     <?php } else { ?>
@@ -255,7 +255,7 @@ $user = getUserToken();
             $('#search_input').keyup(function() {
                 var keyword = $(this).val();
 
-                if (keyword.length > 1) { // Chỉ tìm khi gõ hơn 1 ký tự
+                if (keyword.length >= 1) { // Chỉ tìm khi gõ hơn 1 ký tự
                     $.post('api/ajax_search.php', {
                         'keyword': keyword
                     }, function(data) {
@@ -276,7 +276,7 @@ $user = getUserToken();
         
             // Khi click lại vào ô input thì hiện lại gợi ý (nếu có dữ liệu cũ)
             $('#search_input').click(function() {
-                if ($(this).val().length > 1 && $('#search_suggestions').html().trim() != "") {
+                if ($(this).val().length >= 1 && $('#search_suggestions').html().trim() != "") {
                     $('#search_suggestions').fadeIn();
                 }
             });

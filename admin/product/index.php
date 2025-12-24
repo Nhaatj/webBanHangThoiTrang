@@ -1,16 +1,25 @@
 <?php
 $title = 'Quản Lý Sản Phẩm';
 $baseUrl = '../';
+$titleHeader = 'Quản Lý Sản Phẩm';
 require_once('../layouts/header.php');
 
-$sql = "select Product.*, Category.name as category_name from Product left join Category on Product.category_id = Category.id where Product.deleted = 0";
+// JOIN thêm bảng Product_Size để lấy size (dùng GROUP_CONCAT để gộp các size của 1 sản phẩm vào 1 dòng)
+$sql = "SELECT  Product.*,
+                Category.name as category_name, 
+                GROUP_CONCAT(Product_Size.size_name SEPARATOR ', ') as size_list 
+        FROM Product 
+        LEFT JOIN Category ON Product.category_id = Category.id 
+        LEFT JOIN Product_Size ON Product.id = Product_Size.product_id
+        WHERE Product.deleted = 0
+        GROUP BY Product.id";
 $data = executeResult($sql);
 ?>
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12 table-responsive">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-            <h3 style="margin-bottom: 0;">Quản Lý Sản Phẩm</h3>
+        <div>
+            <!-- <h3 style="margin-bottom: 0;">Quản Lý Sản Phẩm</h3> -->
         
             <a href="editor.php"><button class="btn btn-success">Thêm Sản Phẩm</button></a>
         </div>
@@ -23,6 +32,7 @@ $data = executeResult($sql);
                     <th>Tên Sản Phẩm</th>
                     <th style="width: 100px">Danh Mục</th>
                     <th style="width: 150px">Size</th>
+                    <th style="width: 80px">Tồn Kho</th>
                     <th style="width: 100px">Giá Gốc</th>
                     <th style="width: 100px">Giá Giảm</th>
                     <th style="width: 50px"></th>
@@ -33,15 +43,9 @@ $data = executeResult($sql);
                 <?php
                 $index = 0;
                 foreach ($data as $item) {
-                    // --- XỬ LÝ SIZE ---
-                        $sizeStr = '';
-                        if (!empty($item['sizes'])) {
-                            $sizes = json_decode($item['sizes'], true);
-                            if (is_array($sizes)) {
-                                $sizeStr = implode(', ', $sizes); // Nối mảng thành chuỗi: S, M, L
-                            }
-                        }
-                    // ------------------
+                    // Size list đã được GROUP_CONCAT ở câu SQL trên
+                    $sizeStr = $item['size_list'];
+                    if ($sizeStr == null) $sizeStr = '-'; // Không có size
 
                     echo '<tr>
                             <td>' . (++$index) . '</td>
@@ -49,8 +53,9 @@ $data = executeResult($sql);
                             <td>' . $item['title'] . '</td>
                             <td>' . $item['category_name'] . '</td>
                             <td>' . $sizeStr . '</td>
-                            <td class="text-right">' . number_format($item['price']). '₫</td>
-                            <td class="text-right">' . number_format($item['discount']). '₫</td>
+                            <td>' . $item['inventory_num'] . '</td>
+                            <td class="text-right">' . number_format($item['price'], 0, ',', '.'). '₫</td>
+                            <td class="text-right">' . number_format($item['discount'], 0, ',', '.'). '₫</td>
                             <td style="width: 50px">
                                 <a href="editor.php?id=' . $item['id'] . '"><button class="btn btn-warning">Sửa</button></a>
                             </td>

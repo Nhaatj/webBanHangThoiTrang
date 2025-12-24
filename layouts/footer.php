@@ -5,7 +5,7 @@
                 <div class="col-md-3 col-sm-6 mb-4">
                     <h5><a href="" style="display: inline-block;"><img src="assets/photos/logo.jpg" style="height: 50px; width: 62.5px;"></a></h5>
                     <p>123 Tô ký, Phường Tân Thới Hiệp, Quận 12, TP. HCM</p>
-                    <p><strong>Điện thoại:</strong> 033 835 6397</p>`
+                    <p><strong>Điện thoại:</strong> 033 835 6397</p>
                     <p><strong>Email:</strong> mnin2025@gmail.com</p>
                     
                     <div class="social-icons">
@@ -96,20 +96,26 @@
                     <span id="qv_discount" style="color: red; font-size: 22px; font-weight: bold; margin-right: 10px;"></span>
                     <span id="qv_price" style="color: #888; text-decoration: line-through;"></span>
                 </div>
+                <p class="mb-3">Tồn kho: <span id="qv_inventory" style="font-weight:bold"></span></p>
 
                 <div id="qv_size_area" class="mb-3">
-                    <p style="font-weight: bold; margin-bottom: 5px;">Kích thước:</p>
-                    <div id="qv_size_list" style="display: flex; gap: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <p style="font-weight: bold; margin-bottom: 5px;">Size:</p>
+                        <p id="qv_size_warning" style="color: red; font-size: 12px; font-style: italic; margin: 0 10px; display: none;">Vui lòng chọn kích thước!</p>
                     </div>
-                    <p id="qv_size_warning" style="color: red; font-size: 12px; margin-top: 5px; display: none;">Vui lòng chọn kích thước!</p>
+                    <div id="qv_size_list" style="display: flex; gap: 10px;"></div>
                 </div>
 
                 <div class="mb-4">
-                    <p style="font-weight: bold; margin-bottom: 5px;">Số lượng:</p>
                     <div style="display: flex; align-items: center;">
-                    <button class="btn btn-light border" onclick="updateQvQty(-1)">-</button>
-                    <input type="number" id="qv_quantity" step="1" value="1" class="form-control border-top border-bottom" style="width: 60px; border-radius: 0; height: 38px; text-align: center;" readonly onchange="fixCartNum()">
-                    <button class="btn btn-light border" onclick="updateQvQty(1)">+</button>
+                        <p style="font-weight: bold; margin-bottom: 5px;">Số lượng:</p>
+                        <p id="qv_maxQty_warning" style="color: red; font-size: 12px; font-style: italic; margin-left: 5px; margin-bottom: 0; display: none;">Số lượng mua vượt quá tồn kho (<span id="qv_maxQty" style="font-weight:bold"></span> sản phẩm)!</p>
+                    </div>
+
+                    <div style="display: flex; align-items: center;">
+                        <button class="btn btn-light border" onclick="updateQvQty(-1)">-</button>
+                        <input type="number" id="qv_quantity" step="1" value="1" class="form-control border-top border-bottom" style="width: 60px; border-radius: 0; height: 38px; text-align: center; background-color: #fff;" readonly onchange="fixCartNum()">
+                        <button class="btn btn-light border" onclick="updateQvQty(1)">+</button>
                     </div>
                 </div>
 
@@ -153,85 +159,139 @@
     </style>
 
     <script>
-    // 1. Hàm hiển thị Popup Quick View
-    function showQuickView(btn) {
-        // Lấy dữ liệu từ nút bấm (data-attributes)
-        var id = $(btn).data('id');
-        var title = $(btn).data('title');
-        var price = $(btn).data('price');
-        var discount = $(btn).data('discount');
-        var thumbnail = $(btn).data('thumbnail');
-        var sizes = $(btn).data('sizes'); // jQuery tự parse JSON nếu đúng định dạng
-
-        // Đổ dữ liệu vào Modal HTML
-        $('#qv_product_id').val(id);
-        $('#qv_title').text(title);
-        $('#qv_price').text(price);
-        $('#qv_discount').text(discount);
-        $('#qv_thumbnail').attr('src', thumbnail);
-        $('#qv_link_detail').attr('href', 'detail.php?id=' + id);
+        var qvMaxQty = 0;
         
-        // Reset trạng thái
-        $('#qv_quantity').val(1);
-        $('#qv_selected_size').val('');
-        $('#qv_size_warning').hide();
+        // 1. Hàm hiển thị Popup Quick View
+        function showQuickView(btn) {
+            // Lấy dữ liệu từ nút bấm (data-attributes)
+            var id = $(btn).data('id');
+            var title = $(btn).data('title');
+            var price = $(btn).data('price');
+            var discount = $(btn).data('discount');
+            var thumbnail = $(btn).data('thumbnail');
 
-        // Xử lý hiển thị danh sách Size
-        var sizeHtml = '';
-        if (sizes && sizes.length > 0) {
-            $('#qv_size_area').show();
-            sizes.forEach(function(size) {
-                sizeHtml += `<span class="size-btn" onclick="selectQuickViewSize(this, '${size}')">${size}</span>`;
+            // Đổ dữ liệu vào Modal HTML
+            $('#qv_product_id').val(id);
+            $('#qv_title').text(title);
+            $('#qv_price').text(price);
+            $('#qv_discount').text(discount);
+            $('#qv_thumbnail').attr('src', thumbnail);
+            $('#qv_link_detail').attr('href', 'detail.php?id=' + id);
+            
+            // Reset trạng thái
+            $('#qv_quantity').val(1);
+            $('#qv_selected_size').val('');
+            $('#qv_size_warning').hide();
+            $('#qv_maxQty_warning').hide();
+            $('#qv_size_list').html('Đang tải...');
+            $('#qv_inventory').text('...');
+            $('#qv_maxQty').text('...');
+            $('#qv_price').show();
+
+            if(price == discount) {
+                $('#qv_price').hide();
+            }
+
+            // GỌI AJAX LẤY SIZE VÀ TỒN KHO
+            $.post('api/ajax_request.php', {
+                'action': 'get_product_sizes',
+                'id': id
+            }, function(data) {
+                try {
+                    var res = JSON.parse(data);
+                    
+                    // Set mặc định là tổng tồn kho
+                    qvMaxQty = parseInt(res.inventory_num);
+                    $('#qv_inventory').text(qvMaxQty);
+                    $('#qv_maxQty').text(qvMaxQty);
+
+                    var sizeHtml = '';
+                    if (res.sizes && res.sizes.length > 0) {
+                        $('#qv_size_area').show();
+                        res.sizes.forEach(function(s) {
+                            sizeHtml += `<span class="size-btn" onclick="selectQuickViewSize(this, '${s.name}', ${s.qty})">${s.name}</span>`;
+                        });
+                    } else {
+                        $('#qv_size_area').hide();
+                    }
+                    $('#qv_size_list').html(sizeHtml);
+                } catch(e) {
+                    console.log(e);
+                }
             });
-        } else {
-            $('#qv_size_area').hide();
-        }
-        $('#qv_size_list').html(sizeHtml);
 
-        // Mở Modal
-        $('#quickViewModal').modal('show');
-    }
-
-    // 2. Hàm chọn Size trong Modal
-    function selectQuickViewSize(el, size) {
-        $('#qv_size_list .size-btn').removeClass('active');
-        $(el).addClass('active');
-        $('#qv_selected_size').val(size);
-        $('#qv_size_warning').hide();
-    }
-
-    // 3. Hàm tăng giảm số lượng
-    function updateQvQty(delta) {
-        var current = parseInt($('#qv_quantity').val());
-        var newQty = current + delta;
-        if (newQty < 1) newQty = 1;
-        if (newQty > 999) newQty = 999;
-        $('#qv_quantity').val(newQty);
-    }
-
-    // 4. Xử lý nút THÊM VÀO GIỎ trong Modal
-    $('#qv_btn_add').click(function() {
-        var id = $('#qv_product_id').val();
-        var num = $('#qv_quantity').val();
-        var size = $('#qv_selected_size').val();
-        var hasSize = $('#qv_size_list').children().length > 0;
-
-        // Validate: Nếu có size mà chưa chọn thì báo lỗi
-        if (hasSize && size === '') {
-            $('#qv_size_warning').show();
-            return;
+            // Mở Modal
+            $('#quickViewModal').modal('show');
         }
 
-        // Gọi hàm addCart (đã có sẵn trong footer.php của bạn)
-        addCart(id, num, size);
-        
-        // Ẩn modal
-        $('#quickViewModal').modal('hide');
-    });
+        function showWarning(err_type) {
+            switch (err_type) {
+                case 'size':
+                    $('#qv_size_warning').show();
+                    // Tự động ẩn sau 3 giây
+                    setTimeout(function() {
+                        $('#qv_size_warning').fadeOut();
+                    }, 3000);
+                    break;
+                case 'qty':
+                    $('#qv_maxQty_warning').show();
+                    // Tự động ẩn sau 3 giây
+                    setTimeout(function() {
+                        $('#qv_maxQty_warning').fadeOut();
+                    }, 3000);
+                    break;
+            }
+        }
 
-    function fixCartNum() {
-        $('#qv_quantity').val(Math.abs($('#qv_quantity').val()));
-    }
+        // 2. Hàm chọn Size trong Modal
+        function selectQuickViewSize(el, sizeName, qty) {
+            $('#qv_size_list .size-btn').removeClass('active');
+            $(el).addClass('active');
+            $('#qv_selected_size').val(sizeName);
+            
+            // Cập nhật tồn kho theo size
+            qvMaxQty = qty;
+            $('#qv_inventory').text(qty);
+            $('#qv_maxQty').text(qty);
+            
+            $('#qv_quantity').val(1); 
+        }
+
+        // 3. Hàm tăng giảm số lượng
+        function updateQvQty(delta) {
+            var current = parseInt($('#qv_quantity').val());
+            var newQty = current + delta;
+            if (newQty < 1) newQty = 1;
+            if (newQty > qvMaxQty) {
+                showWarning('qty');
+                newQty = qvMaxQty;
+            }
+            $('#qv_quantity').val(newQty);
+        }
+
+        // 4. Xử lý nút THÊM VÀO GIỎ trong Modal
+        $('#qv_btn_add').click(function() {
+            var id = $('#qv_product_id').val();
+            var num = $('#qv_quantity').val();
+            var size = $('#qv_selected_size').val();
+            var hasSize = $('#qv_size_list').children().length > 0;
+
+            // Validate: Nếu có size mà chưa chọn thì báo lỗi
+            if (hasSize && size === '') {
+                showWarning('size');
+                return;
+            }
+
+            // Gọi hàm addCart (đã có sẵn trong footer.php của bạn)
+            addCart(id, num, size);
+            
+            // Ẩn modal
+            $('#quickViewModal').modal('hide');
+        });
+
+        function fixCartNum() {
+            $('#qv_quantity').val(Math.abs($('#qv_quantity').val()));
+        }
     </script>
     <!-- Xử lý Quick View popup STOP -->
 

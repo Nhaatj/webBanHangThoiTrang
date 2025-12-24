@@ -17,13 +17,13 @@ if(!empty($_POST)) {
             $sql = "update Category set name = '$name' where id = $id";
         }
         execute($sql);
-        header('Location: index.php');
+        echo '<script>window.location.href = "index.php";</script>';
         die();
     } else {
         //insert
         $sql = "insert into Category(name, banner) values ('$name', '$banner')";
         execute($sql);
     }
-    header('Location: index.php');
+    echo '<script>window.location.href = "index.php";</script>';
     die();
 }

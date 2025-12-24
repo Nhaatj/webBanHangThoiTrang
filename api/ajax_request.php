@@ -9,6 +9,21 @@ switch ($action) {
   case 'cart':
     addToCart();
     break;
+  case 'get_product_sizes':
+    $id = getPost('id');
+    // Lấy tồn kho tổng
+    $sqlProd = "select inventory_num from Product where id = $id";
+    $prod = executeResult($sqlProd, true);
+    
+    // Lấy chi tiết size
+    $sqlSizes = "select size_name as name, inventory_num as qty from Product_Size where product_id = $id and inventory_num > 0";
+    $sizes = executeResult($sqlSizes);
+    
+    echo json_encode([
+        'inventory_num' => $prod['inventory_num'],
+        'sizes' => $sizes
+    ]);
+    break;
 }
 
 function addToCart() {
