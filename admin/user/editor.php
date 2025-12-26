@@ -61,9 +61,7 @@ $roleItems = executeResult($sql);
 
           <div class="form-group">
             <label for="email">Email:</label>
-            <input required="true" type="email" class="form-control" id="email" name="email" value="<?= $email ?>"
-              style="<?= ($msg != '') ? 'border-color: red;' : '' ?>">
-
+            <input <?= ($id == 0) ? 'required="true"' : 'disabled' ?> type="email" class="form-control" id="email" name="email" value="<?= $email ?>" style="<?= ($msg != '') ? 'border-color: red;' : '' ?>">
             <p id="email_msg" style="color: red; font-size: 14px; font-style: italic; margin-top: 2px;"><?= $msg ?></p>
           </div>
           <div class="form-group">

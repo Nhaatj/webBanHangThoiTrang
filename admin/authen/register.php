@@ -34,7 +34,7 @@ if ($user != null) {
 
 <body style="background-image: url(../../assets/photos/ecommerce2.jpg); background-size: cover; background-repeat: no-repeat; height: 100vh;">
 	<div class="container">
-		<div class="panel panel-primary" style="width: 480px; margin: 0px auto; margin-top: 50px; background-color: rgba(255, 255, 255, 0.785); padding: 30px; border-radius: 5px; box-shadow: 1rem 2.4rem 4.8rem rgb(183, 235, 244);">
+		<div class="panel panel-primary" style="width: 480px; margin: 0px auto; margin-top: 50px; background-color: rgba(255, 255, 255); padding: 30px; border-radius: 5px; box-shadow: 1rem 2.4rem 4.8rem rgb(183, 235, 244);">
 			<div class="panel-heading">
 				<h2 class="text-center">Đăng Ký Tài Khoản</h2>
 				<!-- <h5 style="color: red" class="text-center"><?= $msg ?></h5> -->
