@@ -9,7 +9,7 @@ if(!empty($_POST)) {
     $note = getPost('note');
     $created_at =  $updated_at = date('Y-m-d H:i:s');
 
-    $sql = "insert into Feedback(fullname, email, phone_number, subject_name, note, created_at, updated_at, status) values('$fullname', '$email', '$phone_number', '$phone_number', '$note', '$created_at', '$updated_at', 0)";
+    $sql = "insert into Feedback(fullname, email, phone_number, subject_name, note, created_at, updated_at, status) values('$fullname', '$email', '$phone_number', '$subject_name', '$note', '$created_at', '$updated_at', 0)";
     execute($sql);
 }
 
@@ -86,7 +86,7 @@ $phone_number = $isLoggedIn ? $user['phone_number'] : '';
                 </div>
                 <div class="form-group">
                     <label for="note">Nội dung:</label>
-                    <textarea class="form-control" id="note" name="note" rows="5" placeholder=""></textarea>
+                    <textarea class="form-control" id="note" name="note" rows="5" placeholder="" maxlength="750"></textarea>
                 </div>
                 <button type="submit" class="btn btn-submit w-100 py-3 text-uppercase">GỬI PHẢN HỒI</button>
             </div>

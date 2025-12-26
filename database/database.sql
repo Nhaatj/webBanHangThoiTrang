@@ -54,7 +54,7 @@ CREATE TABLE `FeedBack` (
   `email` varchar(150),
   `phone_number` varchar(20),
   `subject_name` varchar(200),
-  `note` varchar(500),
+  `note` varchar(750),
   `status` int DEFAULT 0,
   `created_at` datetime,
   `updated_at` datetime
@@ -137,3 +137,12 @@ CREATE TABLE Product_Size (
 );
 
 ALTER TABLE Product DROP COLUMN sizes;
+
+-- Thêm cột fullname mới
+ALTER TABLE Feedback ADD COLUMN fullname VARCHAR(200) DEFAULT NULL AFTER id;
+-- Xóa 2 cột cũ đi
+ALTER TABLE Feedback DROP COLUMN firstname;
+ALTER TABLE Feedback DROP COLUMN lastname;
+
+ALTER TABLE User ADD COLUMN reset_token VARCHAR(255) DEFAULT NULL;
+ALTER TABLE User ADD COLUMN reset_token_exp DATETIME DEFAULT NULL;

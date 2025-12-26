@@ -61,17 +61,38 @@ if (!empty($_POST)) {
     $orderItem = executeResult($sql, true);
     $orderId = $orderItem['id'];
 
-    // 5. Lưu Chi Tiết Đơn Hàng
+    // 5. Lưu Chi tiết đơn hàng & trừ tồn kho
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $item) {
             $product_id = $item['id'];
             $price = $item['discount'];
             $num = $item['num'];
-            $size = isset($item['size']) ? $item['size'] : '';
+            $size = isset($item['size']) ? $item['size'] : ''; // Lấy size nếu có
             $total_item = $price * $num;
+
+            // a. Lưu vào Order_Details
             $sql = "INSERT INTO Order_Details (order_id, product_id, price, num, size, total_money) 
                     VALUES ('$orderId', '$product_id', '$price', '$num', '$size', '$total_item')";
             execute($sql);
+
+            // b. Xử lý trừ tồn kho
+            if (!empty($size)) {
+                // TH1: Sản phẩm có Size
+                // 1. Trừ số lượng trong bảng Product_Size
+                $sql_size = "UPDATE Product_Size SET inventory_num = inventory_num - $num 
+                             WHERE product_id = $product_id AND size_name = '$size'";
+                execute($sql_size);
+
+                // 2. Trừ tổng số lượng trong bảng Product (để quản lý tổng quan)
+                $sql_total = "UPDATE Product SET inventory_num = inventory_num - $num 
+                              WHERE id = $product_id";
+                execute($sql_total);
+            } else {
+                // TH2: Sản phẩm không có Size (chỉ quản lý số lượng ở bảng Product)
+                $sql_total = "UPDATE Product SET inventory_num = inventory_num - $num 
+                              WHERE id = $product_id";
+                execute($sql_total);
+            }
         }
     }
 

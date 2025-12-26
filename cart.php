@@ -264,7 +264,7 @@ $final_total = $total_money + $shipping_fee;
                                         <div class="d-flex justify-content-between align-items-end">
                                             <div class="d-flex align-items-center">
                                                 <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, -1, <?= $stock ?>)">-</button>
-                                                <input type="text" id="qty_<?=$index?>" class="qty-input" value="<?= $item['num'] ?>" readonly>
+                                                <input type="text" id="qty_<?=$index?>" name="" class="qty-input" value="<?= $item['num'] ?>" readonly>
                                                 <button type="button" class="qty-btn" onclick="updateQuantity(<?=$index?>, 1, <?= $stock ?>)">+</button>
                                             </div>
                                             <?php
