@@ -31,6 +31,7 @@ $orderItem = executeResult($sql, true);
                     <th>STT</th>
                     <th>Thumbnail</th>
                     <th>Tên Sản Phẩm</th>
+                    <th>Size</th>
                     <th>Giá</th>
                     <th>Số Lượng</th>
                     <th>Tổng Giá</th>
@@ -44,6 +45,7 @@ $orderItem = executeResult($sql, true);
                             <td>' . (++$index) . '</td>
                             <td><img src="'.fixUrl($item['thumbnail'], '../../').'" style="height: 120px"/></td>
                             <td>' . $item['title'] . '</td>
+                            <td>' . (!empty($item['size']) ? $item['size'] : '') . '</td>
                             <td class="text-right">' . number_format($item['price'], 0, ',', '.') . '₫</td>
                             <td class="text-right">' . $item['num'] . '</td>
                             <td class="text-right">' . number_format($item['total_money'], 0, ',', '.') . '₫</td>
@@ -54,9 +56,9 @@ $orderItem = executeResult($sql, true);
 
                 <tr>
                   <?php if ($orderItem['address'] == "Nhận tại cửa hàng M&N" || $total_detail >= 299000) {
-                      echo '<td style="font-weight: bold" colspan="5" class="text-left">TỔNG CỘNG:</td>';
+                      echo '<td style="font-weight: bold" colspan="6" class="text-left">TỔNG CỘNG:</td>';
                   } else {
-                      echo '<td style="font-weight: bold" colspan="5" class="text-left">TỔNG CỘNG (Bao gồm phí vận chuyển):</td>';
+                      echo '<td style="font-weight: bold" colspan="6" class="text-left">TỔNG CỘNG (Bao gồm phí vận chuyển):</td>';
                   }?>
                   <th class="text-right"><?=$orderItem['total_money']?>₫</th>
                 </tr>
