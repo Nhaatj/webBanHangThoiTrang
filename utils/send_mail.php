@@ -16,8 +16,8 @@ function sendEmail($to, $subject, $content) {
         $mail->SMTPAuth   = true;
         
         // --- THAY ĐỔI THÔNG TIN CỦA BẠN Ở ĐÂY ---
-        $mail->Username   = 'nguyenminhnhat281004@gmail.com'; // Email của bạn
-        $mail->Password   = 'elao ggzq qecp dfgk'; // Mật khẩu ứng dụng (App Password)
+        $mail->Username   = 'thoitrangmn2025@gmail.com'; // Email của bạn
+        $mail->Password   = 'xuov mmcd jssf vbkx'; // Mật khẩu ứng dụng (App Password)
         // ----------------------------------------
         
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -25,7 +25,7 @@ function sendEmail($to, $subject, $content) {
         $mail->CharSet    = 'UTF-8';
 
         // Người gửi và người nhận
-        $mail->setFrom('nguyenminhnhat281004@gmail.com', 'Thời Trang M&N');
+        $mail->setFrom('thoitrangmn2025@gmail.com', 'Thời Trang M&N');
         $mail->addAddress($to);
 
         // Nội dung

@@ -6,7 +6,7 @@
                     <h5><a href="" style="display: inline-block;"><img src="assets/photos/logo.jpg" style="height: 50px; width: 62.5px;"></a></h5>
                     <p>123 Tô ký, Phường Tân Thới Hiệp, Quận 12, TP. HCM</p>
                     <p><strong>Điện thoại:</strong> 033 835 6397</p>
-                    <p><strong>Email:</strong> mnin2025@gmail.com</p>
+                    <p><strong>Email:</strong> thoitrangmn2025@gmail.com</p>
                     
                     <div class="social-icons">
                         <a href="" class="social-link"><i class="fab fa-facebook-f"></i></a>
