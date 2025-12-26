@@ -18,9 +18,9 @@ $hasSize = count($sizeList) > 0;
 ?>
 <style>
   .thumbnail {
-    width: 510px; height: 80vh; background-color: #fff; border-radius: 5px; display: flex; justify-content: center;
+    width: 510px; background-color: #fff; border-radius: 5px; display: flex; justify-content: center; align-items: center; overflow: hidden;
   }
-  .thumbnail img { padding: 10px; }
+  .thumbnail img { padding: 10px; width: 100%; height: 100%; object-fit: contain;}
   .info { width: 610px; height: auto; padding: 15px; background-color: #fff; border-radius: 5px; }
   .row { display: flex; justify-content: space-between; align-items: start; }
   .discount { font-size: 22px; color: red; margin-bottom: 0; }
@@ -48,7 +48,7 @@ $hasSize = count($sizeList) > 0;
 
     <div class="row">
         <div class="thumbnail">
-            <img src="<?= $product['thumbnail'] ?>" style="width: auto; height: 100%">
+            <img src="<?= $product['thumbnail'] ?>">
         </div>
         <div class="info">
             <h2 style="font-size: 24px"><?= $product['title'] ?></h2>

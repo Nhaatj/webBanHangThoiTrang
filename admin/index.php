@@ -94,95 +94,95 @@ foreach ($chartData as $item) {
         color: #0d47a1; /* Màu Dark Blue như yêu cầu */
     }
 </style>
-
-<div class="row" style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between;">
-    <div class="col-md-6">
-        <div class="row">
-            
-            <div class="col-md-6 col-sm-6">
-                <div class="dashboard-card">
-                    <div class="card-info">
-                        <h3><?= number_format($cntUser) ?></h3>
-                        <p>Thành viên</p>
-                    </div>
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6">
-                <div class="dashboard-card">
-                    <div class="card-info">
-                        <h3><?= number_format($cntProduct) ?></h3>
-                        <p>Sản phẩm</p>
-                    </div>
-                    <div class="card-icon">
-                        <i class="fas fa-box-open"></i>
+<div style="display: flex; align-items: center; justify-content: center">
+    <div class="row" style="margin-top: 200px; display: flex; align-items: center; justify-content: space-between;">
+        <div class="col-md-6">
+            <div class="row">
+                
+                <div class="col-md-6 col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="card-info">
+                            <h3><?= number_format($cntUser) ?></h3>
+                            <p>Thành viên</p>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6">
-                <div class="dashboard-card">
-                    <div class="card-info">
-                        <h3><?= number_format($revenue, 0, ',', '.') ?><small style="font-size: 16px">₫</small></h3>
-                        <p>Doanh thu</p>
-                    </div>
-                    <div class="card-icon">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6">
-                <div class="dashboard-card">
-                    <div class="card-info">
-                        <h3><?= number_format($cntOrder) ?></h3>
-                        <p>Đơn hàng</p>
-                    </div>
-                    <div class="card-icon">
-                        <i class="fas fa-shopping-bag"></i>
+                
+                <div class="col-md-6 col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="card-info">
+                            <h3><?= number_format($cntProduct) ?></h3>
+                            <p>Sản phẩm</p>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
                     </div>
                 </div>
+                
+                <div class="col-md-6 col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="card-info">
+                            <h3><?= number_format($revenue, 0, ',', '.') ?><small style="font-size: 16px">₫</small></h3>
+                            <p>Doanh thu</p>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="card-info">
+                            <h3><?= number_format($cntOrder) ?></h3>
+                            <p>Đơn hàng</p>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
-
         </div>
-    </div>
-
-    <?php
+        
+        <?php
         // Format dữ liệu về dạng mảng của mảng: [['Label', 'Value'], ['Giày', 10], ...]
         $dataForChart = [];
         $dataForChart[] = ['Danh mục', 'Số lượng'];
         foreach ($chartData as $item) {
             $dataForChart[] = [$item['name'], (int)$item['count']];
         }
-    ?>
+        ?>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <div class="col-md-6">
-        <div class="card shadow mb-4" style="border-radius: 10px; border: 1px solid rgba(0,0,0,0.08);">
-            <div class="card-header py-3 bg-white" style="border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
-                <h6 class="m-0 font-weight-bold text-dark">Biểu đồ sản phẩm</h6>
-            </div>
-            <div class="card-body" style="padding: 0;">
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
-                    
-                    <div id="piechart_3d" style="width: 65%; height: 300px;"></div>
-
-                    <div id="custom_legend" style="width: 35%; display: flex; flex-direction: column; justify-content: center;">
-                        </div>
+<div class="col-md-6">
+    <div class="card shadow mb-4" style="border-radius: 10px; border: 1px solid rgba(0,0,0,0.08);">
+        <div class="card-header py-3 bg-white" style="border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
+            <h6 class="m-0 font-weight-bold text-dark">Biểu đồ sản phẩm</h6>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+                
+                <div id="piechart_3d" style="width: 65%; height: 300px;"></div>
+                
+                <div id="custom_legend" style="width: 35%; display: flex; flex-direction: column; justify-content: center;">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <script type="text/javascript">
         // 1. Cấu hình Google Charts
         google.charts.load("current", {packages:["corechart"]});
         google.charts.setOnLoadCallback(drawChart);
-
+        
         // 2. Danh sách màu sắc (Bạn có thể đổi màu tùy thích tại đây)
         const myColors = [
             '#3366cc', // Xanh dương đậm
@@ -194,12 +194,12 @@ foreach ($chartData as $item) {
             '#dd4477', // Hồng
             '#66aa00'  // Xanh nõn chuối
         ];
-
+        
         function drawChart() {
             // Lấy dữ liệu từ PHP
             var dataArray = <?= json_encode($dataForChart) ?>;
             var data = google.visualization.arrayToDataTable(dataArray);
-
+            
             var options = {
                 is3D: true,             // Kích hoạt chế độ 3D
                 pieSliceText: 'percentage', // Hiển thị phần trăm trên miếng bánh
@@ -217,29 +217,29 @@ foreach ($chartData as $item) {
                     fontSize: 14
                 }
             };
-
+            
             var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
             chart.draw(data, options);
-
+            
             // 3. Tạo Chú thích (Legend) tùy chỉnh để có hình tròn
             generateCustomLegend(dataArray);
         }
-
+        
         function generateCustomLegend(dataArray) {
             const legendContainer = document.getElementById('custom_legend');
             legendContainer.innerHTML = ''; // Reset
-
+            
             // Bỏ qua phần tử đầu tiên vì nó là Header ['Danh mục', 'Số lượng']
             for (let i = 1; i < dataArray.length; i++) {
                 const label = dataArray[i][0]; // Tên danh mục
                 const color = myColors[(i - 1) % myColors.length]; // Lấy màu tương ứng
-
+                
                 // Tạo HTML cho từng dòng chú thích
                 const item = document.createElement('div');
                 item.style.display = 'flex';
                 item.style.alignItems = 'center';
                 item.style.marginBottom = '12px'; // Khoảng cách giữa các dòng
-
+                
                 // Tạo hình tròn màu
                 const dot = document.createElement('span');
                 dot.style.width = '12px';
@@ -248,20 +248,21 @@ foreach ($chartData as $item) {
                 dot.style.borderRadius = '50%'; // Bo tròn
                 dot.style.display = 'inline-block';
                 dot.style.marginRight = '10px';
-
+                
                 // Tạo text
                 const text = document.createElement('span');
                 text.innerText = label;
                 text.style.fontSize = '14px';
                 text.style.color = '#333';
                 text.style.fontWeight = '500';
-
+                
                 item.appendChild(dot);
                 item.appendChild(text);
                 legendContainer.appendChild(item);
             }
         }
-    </script>
+        </script>
+</div>
 
 <?php
 require_once('layouts/footer.php');
