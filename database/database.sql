@@ -139,7 +139,7 @@ CREATE TABLE Product_Size (
 ALTER TABLE Product DROP COLUMN sizes;
 
 -- Thêm cột fullname mới
-ALTER TABLE Feedback ADD COLUMN fullname VARCHAR(200) DEFAULT NULL AFTER id;
+ALTER TABLE Feedback ADD COLUMN fullname VARCHAR(100) DEFAULT NULL AFTER id;
 -- Xóa 2 cột cũ đi
 ALTER TABLE Feedback DROP COLUMN firstname;
 ALTER TABLE Feedback DROP COLUMN lastname;
